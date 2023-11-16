@@ -5,9 +5,9 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/anden007/af_dp_clean_core/pkg/union_jd_sdk"
-	"github.com/anden007/af_dp_clean_core/pkg/union_jd_sdk/common"
-	"github.com/anden007/af_dp_clean_core/pkg/union_jd_sdk/response"
+	"github.com/anden007/dp_clean_core/pkg/union_jd_sdk"
+	"github.com/anden007/dp_clean_core/pkg/union_jd_sdk/common"
+	"github.com/anden007/dp_clean_core/pkg/union_jd_sdk/response"
 
 	jsoniter "github.com/json-iterator/go"
 	jsonTime "github.com/liamylian/jsontime/v2/v2"

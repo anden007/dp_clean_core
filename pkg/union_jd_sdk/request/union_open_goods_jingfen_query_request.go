@@ -3,7 +3,7 @@ package request
 import (
 	"encoding/json"
 
-	"github.com/anden007/af_dp_clean_core/pkg/union_jd_sdk"
+	"github.com/anden007/dp_clean_core/pkg/union_jd_sdk"
 )
 
 // UnionOpenGoodsJingfenQuery 京粉精选商品查询接口

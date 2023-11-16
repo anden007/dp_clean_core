@@ -8,8 +8,8 @@ import (
 	"path"
 	"strings"
 
-	"github.com/anden007/af_dp_clean_core/graph/extgen/template"
-	"github.com/anden007/af_dp_clean_core/misc"
+	"github.com/anden007/dp_clean_core/graph/extgen/template"
+	"github.com/anden007/dp_clean_core/misc"
 
 	"github.com/99designs/gqlgen/codegen"
 	"github.com/99designs/gqlgen/plugin"

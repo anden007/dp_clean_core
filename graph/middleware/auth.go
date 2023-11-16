@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/anden007/af_dp_clean_core/part"
-	"github.com/anden007/af_dp_clean_core/pkg"
+	"github.com/anden007/dp_clean_core/part"
+	"github.com/anden007/dp_clean_core/pkg"
 
 	"github.com/spf13/viper"
 )

@@ -3,7 +3,7 @@ package base
 import (
 	"context"
 
-	"github.com/anden007/af_dp_clean_core/pkg"
+	"github.com/anden007/dp_clean_core/pkg"
 )
 
 type ICRUDUsecase[T IDBModel] interface {

@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/anden007/af_dp_clean_core/misc"
-	"github.com/anden007/af_dp_clean_core/pkg"
-	"github.com/anden007/af_dp_clean_core/pkg/base"
+	"github.com/anden007/dp_clean_core/misc"
+	"github.com/anden007/dp_clean_core/pkg"
+	"github.com/anden007/dp_clean_core/pkg/base"
 
 	jsoniter "github.com/json-iterator/go"
 	jsonTime "github.com/liamylian/jsontime/v2/v2"

@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/anden007/af_dp_clean_core/misc"
-	"github.com/anden007/af_dp_clean_core/pkg"
+	"github.com/anden007/dp_clean_core/misc"
+	"github.com/anden007/dp_clean_core/pkg"
 
 	"github.com/centrifugal/centrifuge-go"
 	"github.com/golang-jwt/jwt"

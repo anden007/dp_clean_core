@@ -1,4 +1,4 @@
-module github.com/anden007/af_dp_clean_core
+module github.com/anden007/dp_clean_core
 
 go 1.21
 

@@ -1,7 +1,7 @@
 package part
 
 import (
-	"github.com/anden007/af_dp_clean_core/pkg"
+	"github.com/anden007/dp_clean_core/pkg"
 
 	"github.com/mojocn/base64Captcha"
 )

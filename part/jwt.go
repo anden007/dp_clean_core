@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/anden007/af_dp_clean_core/misc"
-	"github.com/anden007/af_dp_clean_core/pkg"
+	"github.com/anden007/dp_clean_core/misc"
+	"github.com/anden007/dp_clean_core/pkg"
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/jwt"

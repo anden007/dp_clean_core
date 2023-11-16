@@ -15,8 +15,8 @@ type ModelExtOption struct{
 package <%==s options.PackageName %>
 
 import (
-	misc "github.com/anden007/af_dp_clean_core/misc"
-	base "github.com/anden007/af_dp_clean_core/pkg/base"
+	misc "github.com/anden007/dp_clean_core/misc"
+	base "github.com/anden007/dp_clean_core/pkg/base"
 	"reflect"
 	"strings"
 <%if options.HasCreateTime || options.HasUpdateTime {%>

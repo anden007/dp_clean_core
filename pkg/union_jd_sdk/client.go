@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/anden007/af_dp_clean_core/pkg/union_jd_sdk/common"
+	"github.com/anden007/dp_clean_core/pkg/union_jd_sdk/common"
 )
 
 const ServerUrl = "https://api.jd.com/routerjson"

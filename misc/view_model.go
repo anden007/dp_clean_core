@@ -1,7 +1,7 @@
 package misc
 
 import (
-	"github.com/anden007/af_dp_clean_core/pkg/base"
+	"github.com/anden007/dp_clean_core/pkg/base"
 
 	"github.com/gotidy/copy"
 	"github.com/kataras/iris/v12"

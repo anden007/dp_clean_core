@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/anden007/af_dp_clean_core/pkg/simplelru"
+	"github.com/anden007/dp_clean_core/pkg/simplelru"
 
 	"github.com/spf13/viper"
 )

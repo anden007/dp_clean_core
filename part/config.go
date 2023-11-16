@@ -6,7 +6,7 @@ import (
 	"os"
 	"sync"
 
-	"github.com/anden007/af_dp_clean_core/misc"
+	"github.com/anden007/dp_clean_core/misc"
 
 	"github.com/spf13/viper"
 )
@@ -100,7 +100,7 @@ func LoadConfig(forceEnv EnumEnv) (err error) {
 			}
 			if ENV == ENUM_ENV_DEV {
 				fmt.Println("*********************************************")
-				fmt.Println("Welcome use github.com/anden007/af_dp_clean_core rapid development platform")
+				fmt.Println("Welcome use github.com/anden007/dp_clean_core rapid development platform")
 				fmt.Println("Version: 2.0.0")
 				fmt.Println("Mode: Development")
 				fmt.Printf("Host: %s\n", APP_HOST)
