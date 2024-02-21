@@ -9,7 +9,7 @@ import (
 package test
 
 import (
-	"github.com/anden007/dp_clean_core/graph/test/mock"
+	"go-dp-clean/graph/test/mock"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
