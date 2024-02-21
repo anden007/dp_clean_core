@@ -98,13 +98,13 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 	content.ImportAlias("go-dp-clean/docs", "docs")
 	content.ImportAlias("github.com/anden007/dp_clean_core/part", "part")
 	content.ImportAlias("github.com/anden007/dp_clean_core/pkg/base", "base")
-	content.ImportAlias("github.com/anden007/dp_clean_core/graph/model", "model")
+	content.ImportAlias("go-dp-clean/graph/model", "model")
 	content.ImportAlias("github.com/anden007/dp_clean_core/misc", "misc")
 
 	// ViewModel
 	content.Type().Id(fmt.Sprintf("VM_%s", mo.CamelCase())).Struct(
 		jen.Qual("github.com/anden007/dp_clean_core/pkg/base", "BaseViewModel"),
-		jen.Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()),
+		jen.Qual("go-dp-clean/graph/model", mo.CamelCase()),
 	)
 	content.Func().Params(
 		jen.Id("m").Op("*").Id(fmt.Sprintf("VM_%s", mo.CamelCase())),
@@ -120,13 +120,13 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 	content.Type().Id(fmt.Sprintf("%sHandler", mo.CamelCase())).Struct(
 		jen.Id("jsonEncoder").Qual("github.com/json-iterator/go", "API"),
 		jen.Id("jwt").Qual("github.com/anden007/dp_clean_core/part", "IJwtService"),
-		jen.Id(usecase).Qual("github.com/anden007/dp_clean_core/graph/model", fmt.Sprintf("I%sUsecase", mo.CamelCase())),
+		jen.Id(usecase).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sUsecase", mo.CamelCase())),
 	).Line()
 	// New
 	content.Func().Id("NewHttpHandler").Params(
 		jen.Id("party").Qual("github.com/kataras/iris/v12", "Party"),
 		jen.Id("jwt").Qual("github.com/anden007/dp_clean_core/part", "IJwtService"),
-		jen.Id(usecase).Qual("github.com/anden007/dp_clean_core/graph/model", fmt.Sprintf("I%sUsecase", mo.CamelCase())),
+		jen.Id(usecase).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sUsecase", mo.CamelCase())),
 	).Block(
 		jen.Comment("根据当前模块挂载路径,修改Swagger中API请求路径"),
 		jen.Qual("go-dp-clean/docs", "SwaggerInfo").Dot("SwaggerTemplate").Op("=").Qual("misc", "ProcessSwaggerTemplate").Params(
@@ -320,7 +320,7 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 			jen.Id("err").Op("==").Nil(),
 		).Block(
 			jen.List(jen.Id("result"), jen.Err()).Op("=").Qual("github.com/anden007/dp_clean_core/misc", "DBModel2View").Index(
-				jen.List(jen.Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()),
+				jen.List(jen.Qual("go-dp-clean/graph/model", mo.CamelCase()),
 					jen.Op("*").Id(fmt.Sprintf("VM_%s", mo.CamelCase())),
 				),
 			).Params(jen.Id("dbResult")),
@@ -364,7 +364,7 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 			jen.Id("err").Op("==").Nil(),
 		).Block(
 			jen.List(jen.Id("result"), jen.Err()).Op("=").Qual("github.com/anden007/dp_clean_core/misc", "DBModelList2ViewList").Index(
-				jen.List(jen.Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()),
+				jen.List(jen.Qual("go-dp-clean/graph/model", mo.CamelCase()),
 					jen.Op("*").Id(fmt.Sprintf("VM_%s", mo.CamelCase())),
 				),
 			).Params(jen.Id("dbResult")),
@@ -404,7 +404,7 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 		jen.Var().Id("err").Error(),
 		jen.Var().Id("total").Int64().Op("=").Lit(0),
 		jen.Var().Id("result").Index().Op("*").Id(fmt.Sprintf("VM_%s", mo.CamelCase())),
-		jen.Var().Id("dbResult").Index().Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()),
+		jen.Var().Id("dbResult").Index().Qual("go-dp-clean/graph/model", mo.CamelCase()),
 		jen.Id("success").Op(":=").True(),
 		jen.Id("message").Op(":=").Lit(""),
 		jen.If(
@@ -424,7 +424,7 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 					jen.Err().Op("==").Nil(),
 				).Block(
 					jen.List(jen.Id("result"), jen.Err()).Op("=").Qual("github.com/anden007/dp_clean_core/misc", "DBModelList2ViewList").Index(
-						jen.List(jen.Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()),
+						jen.List(jen.Qual("go-dp-clean/graph/model", mo.CamelCase()),
 							jen.Op("*").Id(fmt.Sprintf("VM_%s", mo.CamelCase())),
 						),
 					).Params(jen.Id("dbResult")),
@@ -462,7 +462,7 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 	mo := stringy.New(modelName)
 	content := jen.NewFile(fmt.Sprintf("%s_%s", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	// Import
-	content.ImportAlias("github.com/anden007/dp_clean_core/graph/model", "model")
+	content.ImportAlias("go-dp-clean/graph/model", "model")
 	content.ImportAlias("github.com/anden007/dp_clean_core/part", "part")
 	content.ImportAlias("github.com/anden007/dp_clean_core/pkg", "pkg")
 	content.ImportAlias("github.com/anden007/dp_clean_core/misc", "misc")
@@ -475,9 +475,9 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 	content.Func().Id("NewRepository").Params(
 		jen.Id("db").Qual("github.com/anden007/dp_clean_core/part", "IDataBase"),
 		jen.Id("dataLogger").Qual("github.com/anden007/dp_clean_core/part", "IDataLogger"),
-	).Qual("github.com/anden007/dp_clean_core/graph/model", fmt.Sprintf("I%sRepository", mo.CamelCase())).Block(
+	).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sRepository", mo.CamelCase())).Block(
 		jen.If(jen.Qual("github.com/anden007/dp_clean_core/part", "ENV").Op("==").Qual("github.com/anden007/dp_clean_core/part", "ENUM_ENV_DEV").Op("&&").Qual("github.com/spf13/viper", "GetBool").Params(jen.Lit("mysql.auto_migrate"))).Block(
-			jen.Id("db").Dot("GetDB").Call().Dot("AutoMigrate").Params(jen.Op("&").Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()).Values()),
+			jen.Id("db").Dot("GetDB").Call().Dot("AutoMigrate").Params(jen.Op("&").Qual("go-dp-clean/graph/model", mo.CamelCase()).Values()),
 		),
 		jen.Return().Op("&").Id(fmt.Sprintf("%sRepository", mo.CamelCase())).Values(
 			jen.Dict{
@@ -490,7 +490,7 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 	content.Func().Params(
 		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.CamelCase())),
 	).Id("Add").Params(
-		jen.Id("entity").Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()),
+		jen.Id("entity").Qual("go-dp-clean/graph/model", mo.CamelCase()),
 		jen.Id("ctx").Qual("context", "Context"),
 		jen.Id("transId").String(),
 	).Parens(
@@ -543,7 +543,7 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 					jen.Id("gErr").Op("==").Nil(),
 				).Block(
 					jen.Err().Op("=").Id("tx").Dot("Delete").Call(
-						jen.Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()).Values(),
+						jen.Qual("go-dp-clean/graph/model", mo.CamelCase()).Values(),
 						jen.Lit("id in (?)"),
 						jen.Id("ids"),
 					).Dot("Error"),
@@ -557,7 +557,7 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 				),
 			).Else().Block(
 				jen.Err().Op("=").Id("m").Dot("db").Dot("GetDB").Call().Dot("Delete").Call(
-					jen.Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()).Values(),
+					jen.Qual("go-dp-clean/graph/model", mo.CamelCase()).Values(),
 					jen.Lit("id in (?)"),
 					jen.Id("ids"),
 				).Dot("Error"),
@@ -576,7 +576,7 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 	content.Func().Params(
 		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.CamelCase())),
 	).Id("Edit").Params(
-		jen.Id("entity").Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()),
+		jen.Id("entity").Qual("go-dp-clean/graph/model", mo.CamelCase()),
 		jen.Id("ctx").Qual("context", "Context"),
 		jen.Id("transId").String(),
 	).Parens(
@@ -636,7 +636,7 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 					jen.Id("gErr").Op("==").Nil(),
 				).Block(
 					jen.Err().Op("=").Id("tx").Dot("Model").Call(
-						jen.Op("&").Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()).Values(),
+						jen.Op("&").Qual("go-dp-clean/graph/model", mo.CamelCase()).Values(),
 					).Dot("Where").Call(
 						jen.Lit("id = ?"),
 						jen.Id("id"),
@@ -649,7 +649,7 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 				),
 			).Else().Block(
 				jen.Err().Op("=").Id("m").Dot("db").Dot("GetDB").Call().Dot("Model").Call(
-					jen.Op("&").Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()).Values(),
+					jen.Op("&").Qual("go-dp-clean/graph/model", mo.CamelCase()).Values(),
 				).Dot("Where").Call(
 					jen.Lit("id = ?"),
 					jen.Id("id"),
@@ -668,12 +668,12 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.CamelCase())),
 	).Id("GetAll").Params().Parens(
 		jen.List(
-			jen.Id("result").Index().Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()),
+			jen.Id("result").Index().Qual("go-dp-clean/graph/model", mo.CamelCase()),
 			jen.Err().Error(),
 		),
 	).Block(
 		jen.Err().Op("=").Id("m").Dot("db").Dot("GetDB").Call().Dot("Model").Call(
-			jen.Op("&").Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()).Values(),
+			jen.Op("&").Qual("go-dp-clean/graph/model", mo.CamelCase()).Values(),
 		).Dot("Find").Call(jen.Op("&").Id("result")).Dot("Error"),
 		jen.Return(),
 	).Line()
@@ -684,12 +684,12 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 		jen.Id("id").String(),
 	).Parens(
 		jen.List(
-			jen.Id("result").Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()),
+			jen.Id("result").Qual("go-dp-clean/graph/model", mo.CamelCase()),
 			jen.Err().Error(),
 		),
 	).Block(
 		jen.Err().Op("=").Id("m").Dot("db").Dot("GetDB").Call().Dot("Model").Call(
-			jen.Op("&").Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()).Values(),
+			jen.Op("&").Qual("go-dp-clean/graph/model", mo.CamelCase()).Values(),
 		).Dot("Where").Call(
 			jen.Lit("id = ?"),
 			jen.Id("id"),
@@ -703,12 +703,12 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 		jen.Id("ids").Index().String(),
 	).Parens(
 		jen.List(
-			jen.Id("result").Index().Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()),
+			jen.Id("result").Index().Qual("go-dp-clean/graph/model", mo.CamelCase()),
 			jen.Err().Error(),
 		),
 	).Block(
 		jen.Err().Op("=").Id("m").Dot("db").Dot("GetDB").Call().Dot("Model").Call(
-			jen.Op("&").Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()).Values(),
+			jen.Op("&").Qual("go-dp-clean/graph/model", mo.CamelCase()).Values(),
 		).Dot("Where").Call(
 			jen.Lit("id in (?)"),
 			jen.Id("ids"),
@@ -722,21 +722,21 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 		jen.Id("condition").Map(jen.String()).Qual("github.com/anden007/dp_clean_core/pkg", "SearchCondition"),
 	).Parens(
 		jen.List(
-			jen.Id("result").Index().Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()),
+			jen.Id("result").Index().Qual("go-dp-clean/graph/model", mo.CamelCase()),
 			jen.Id("total").Int64(),
 			jen.Err().Error(),
 		),
 	).Block(
 		jen.Id("query").Op(":=").Id("m").Dot("db").Dot("GetDB").Call().Dot("Model").Call(
-			jen.Op("&").Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()).Values(),
+			jen.Op("&").Qual("go-dp-clean/graph/model", mo.CamelCase()).Values(),
 		),
 		jen.Id("countQuery").Op(":=").Id("m").Dot("db").Dot("GetDB").Call().Dot("Model").Call(
-			jen.Op("&").Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()).Values(),
+			jen.Op("&").Qual("go-dp-clean/graph/model", mo.CamelCase()).Values(),
 		),
 		jen.Err().Op("=").Qual("github.com/anden007/dp_clean_core/pkg", "NewQueryCondition").Call(
-			jen.Qual("github.com/anden007/dp_clean_core/graph/model", "ModelDBFields"),
+			jen.Qual("go-dp-clean/graph/model", "ModelDBFields"),
 		).Dot("GetQuery").Call(
-			jen.Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()).Values().Dot("TableName").Call(),
+			jen.Qual("go-dp-clean/graph/model", mo.CamelCase()).Values().Dot("TableName").Call(),
 			jen.Id("condition"),
 			jen.Id("query"),
 			jen.Id("countQuery"),
@@ -782,16 +782,16 @@ func genUsecase(modelName string, catalog string, overwrite bool) {
 	repo := stringy.New(fmt.Sprintf("%sRepo", mo.CamelCase())).LcFirst()
 	content := jen.NewFile(fmt.Sprintf("%s_%s", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	// Import
-	content.ImportAlias("github.com/anden007/dp_clean_core/graph/model", "model")
+	content.ImportAlias("go-dp-clean/graph/model", "model")
 	content.ImportAlias("github.com/anden007/dp_clean_core/pkg", "pkg")
 	// Struct
 	content.Type().Id(fmt.Sprintf("%sUsecase", mo.CamelCase())).Struct(
-		jen.Id(repo).Qual("github.com/anden007/dp_clean_core/graph/model", fmt.Sprintf("I%sRepository", mo.CamelCase())),
+		jen.Id(repo).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sRepository", mo.CamelCase())),
 	).Line()
 	// New
 	content.Func().Id("NewUsecase").Params(
-		jen.Id(repo).Qual("github.com/anden007/dp_clean_core/graph/model", fmt.Sprintf("I%sRepository", mo.CamelCase())),
-	).Qual("github.com/anden007/dp_clean_core/graph/model", fmt.Sprintf("I%sUsecase", mo.CamelCase())).Block(
+		jen.Id(repo).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sRepository", mo.CamelCase())),
+	).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sUsecase", mo.CamelCase())).Block(
 		jen.Return().Op("&").Id(fmt.Sprintf("%sUsecase", mo.CamelCase())).Values(
 			jen.Dict{
 				jen.Id(repo): jen.Id(repo),
@@ -802,7 +802,7 @@ func genUsecase(modelName string, catalog string, overwrite bool) {
 	content.Func().Params(
 		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.CamelCase())),
 	).Id("Add").Params(
-		jen.Id("entity").Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()),
+		jen.Id("entity").Qual("go-dp-clean/graph/model", mo.CamelCase()),
 		jen.Id("ctx").Qual("context", "Context"),
 		jen.Id("transId").String(),
 	).Parens(
@@ -830,7 +830,7 @@ func genUsecase(modelName string, catalog string, overwrite bool) {
 	content.Func().Params(
 		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.CamelCase())),
 	).Id("Edit").Params(
-		jen.Id("entity").Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()),
+		jen.Id("entity").Qual("go-dp-clean/graph/model", mo.CamelCase()),
 		jen.Id("ctx").Qual("context", "Context"),
 		jen.Id("transId").String(),
 	).Parens(
@@ -860,7 +860,7 @@ func genUsecase(modelName string, catalog string, overwrite bool) {
 		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.CamelCase())),
 	).Id("GetAll").Params().Parens(
 		jen.List(
-			jen.Id("result").Index().Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()),
+			jen.Id("result").Index().Qual("go-dp-clean/graph/model", mo.CamelCase()),
 			jen.Err().Error(),
 		),
 	).Block(
@@ -871,7 +871,7 @@ func genUsecase(modelName string, catalog string, overwrite bool) {
 		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.CamelCase())),
 	).Id("GetById").Params(jen.Id("id").String()).Parens(
 		jen.List(
-			jen.Id("result").Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()),
+			jen.Id("result").Qual("go-dp-clean/graph/model", mo.CamelCase()),
 			jen.Err().Error(),
 		),
 	).Block(
@@ -882,7 +882,7 @@ func genUsecase(modelName string, catalog string, overwrite bool) {
 		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.CamelCase())),
 	).Id("GetByIds").Params(jen.Id("ids").Index().String()).Parens(
 		jen.List(
-			jen.Id("result").Index().Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()),
+			jen.Id("result").Index().Qual("go-dp-clean/graph/model", mo.CamelCase()),
 			jen.Err().Error(),
 		),
 	).Block(
@@ -895,7 +895,7 @@ func genUsecase(modelName string, catalog string, overwrite bool) {
 		jen.Id("condition").Map(jen.String()).Qual("github.com/anden007/dp_clean_core/pkg", "SearchCondition"),
 	).Parens(
 		jen.List(
-			jen.Id("result").Index().Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase()),
+			jen.Id("result").Index().Qual("go-dp-clean/graph/model", mo.CamelCase()),
 			jen.Id("total").Int64(),
 			jen.Err().Error(),
 		),
@@ -931,7 +931,7 @@ func genFsm(modelName string, catalog string, overwrite bool) {
 	// New
 	content.Func().Id("NewFsm").Params(
 		jen.Id("ctx").Qual("context", "Context"),
-		jen.Id(usecase).Qual("github.com/anden007/dp_clean_core/graph/model", fmt.Sprintf("I%sUsecase", mo.CamelCase())),
+		jen.Id(usecase).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sUsecase", mo.CamelCase())),
 	).Op("*").Qual("github.com/smallnest/gofsm", "StateMachine").Block(
 		jen.Id("delegate").Op(":=").Op("&").Qual("github.com/smallnest/gofsm", "DefaultDelegate").Values(
 			jen.Dict{
@@ -966,7 +966,7 @@ func genFsm(modelName string, catalog string, overwrite bool) {
 	// Struct
 	content.Type().Id(fmt.Sprintf("%sEventProcessor", mo.CamelCase())).Struct(
 		jen.Id("ctx").Qual("context", "Context"),
-		jen.Id(usecase).Qual("github.com/anden007/dp_clean_core/graph/model", fmt.Sprintf("I%sUsecase", mo.CamelCase())),
+		jen.Id(usecase).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sUsecase", mo.CamelCase())),
 	).Line()
 	// Action
 	content.Comment("当尝试执行Action时执行,可在此方法中对数据进行检查,检查失败则toState状态的OnEnter事件不会执行,而是触发执行OnActionFailure方法")
@@ -974,7 +974,7 @@ func genFsm(modelName string, catalog string, overwrite bool) {
 		jen.Id("m").Op("*").Id(fmt.Sprintf("%sEventProcessor", mo.CamelCase())),
 	).Id("Action").Params(jen.Id("action").String(), jen.Id("fromState").String(), jen.Id("toState").String(), jen.Id("args").Index().Interface()).Error().Block(
 		jen.If(jen.Id("action").Op("==").Lit("Check")).Block(
-			jen.Id("entity").Op(":=").Id("args").Index(jen.Id("0")).Op(".").Params(jen.Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase())),
+			jen.Id("entity").Op(":=").Id("args").Index(jen.Id("0")).Op(".").Params(jen.Qual("go-dp-clean/graph/model", mo.CamelCase())),
 			jen.If(jen.Id("entity").Dot("Title").Op("==").Lit("")).Block(
 				jen.Return(jen.Qual("errors", "New").Params(jen.Lit("必须输入标题"))),
 			),
@@ -997,7 +997,7 @@ func genFsm(modelName string, catalog string, overwrite bool) {
 		jen.If(
 			jen.Len(jen.Id("args")).Op(">").Id("0"),
 		).Block(
-			jen.Id("entity").Op(":=").Id("args").Index(jen.Id("0")).Op(".").Params(jen.Qual("github.com/anden007/dp_clean_core/graph/model", mo.CamelCase())),
+			jen.Id("entity").Op(":=").Id("args").Index(jen.Id("0")).Op(".").Params(jen.Qual("go-dp-clean/graph/model", mo.CamelCase())),
 			jen.Id("m").Dot(usecase).Dot("Updates").Call(jen.Id("entity").Dot("Id"), jen.Map(jen.String()).Interface().Values(
 				jen.Dict{
 					jen.Lit("state"): jen.Id("toState"),
@@ -1087,7 +1087,7 @@ func genCustomDelivery(modelName string, catalog string, overwrite bool) {
 	content.ImportAlias("go-dp-clean/docs", "docs")
 	content.ImportAlias("github.com/anden007/dp_clean_core/part", "part")
 	content.ImportAlias("github.com/anden007/dp_clean_core/pkg/base", "base")
-	content.ImportAlias("github.com/anden007/dp_clean_core/graph/model", "model")
+	content.ImportAlias("go-dp-clean/graph/model", "model")
 	content.ImportAlias("github.com/anden007/dp_clean_core/misc", "misc")
 
 	// Struct
