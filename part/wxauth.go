@@ -25,7 +25,7 @@ type IWxAuth interface {
 	GetCurrentUser(ctx iris.Context) (result *pkg.WxAuthInfo)
 	CheckAuth(ctx iris.Context, cak string, customReturnURL string) (result bool)
 	ClearAuth(ctx iris.Context) (err error)
-	DoAuth(ctx iris.Context, afterAuth func(authInfo *pkg.WxAuthInfo, cak string))
+	DoAuth(ctx iris.Context, afterAuth func(authInfo *pkg.WxAuthInfo, cak string) (customRedirect bool))
 	GetAuthUrl(cak string) (result string)
 }
 
@@ -132,8 +132,9 @@ func (m *WxAuth) CheckAuth(ctx iris.Context, cak string, customReturnURL string)
 	return
 }
 
-func (m *WxAuth) DoAuth(ctx iris.Context, afterAuth func(authInfo *pkg.WxAuthInfo, cak string)) {
+func (m *WxAuth) DoAuth(ctx iris.Context, afterAuth func(authInfo *pkg.WxAuthInfo, cak string) (customRedirect bool)) {
 	m.checkMe()
+	customRedirect := false
 	customReturnURL := ""
 	if cacheReturnUrl, cacheErr := m.sessionCacheInstance.Get(ctx, "auth_return_url"); cacheErr == nil {
 		m.sessionCacheInstance.Del(ctx, "auth_return_url")
@@ -220,9 +221,11 @@ func (m *WxAuth) DoAuth(ctx iris.Context, afterAuth func(authInfo *pkg.WxAuthInf
 				url = returnURL
 			}
 			if afterAuth != nil {
-				afterAuth(wxAuthInfo, cak)
+				customRedirect = afterAuth(wxAuthInfo, cak)
 			}
-			ctx.Redirect(url)
+			if !customRedirect {
+				ctx.Redirect(url)
+			}
 		}
 	}
 }
