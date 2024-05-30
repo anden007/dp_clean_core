@@ -129,7 +129,7 @@ func (m *RpcxService) GetClient(serviceName string, callback func(clt client.XCl
 }
 
 func (m *RpcxService) Serve() (err error) {
-	go func() { // rpxc监听地址
+	go func() { // rpxc服务监听地址
 		err = m.rpcxServer.Serve("tcp", m.listenAddress)
 	}()
 	return
