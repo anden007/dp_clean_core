@@ -17,7 +17,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-type IRpcxRegistry interface {
+type IRpcxService interface {
 	InitConfig() (err error)
 	InitRpcx() (err error)
 	RegisterName(serviceName string, rcvr interface{}, metadata string) (err error)
@@ -27,7 +27,7 @@ type IRpcxRegistry interface {
 	Serve() (err error)
 }
 
-type RpcxRegistry struct {
+type RpcxService struct {
 	serviceClientPool *sync.Map
 	rpcxServer        *server.Server
 	// 注册中心地址
@@ -40,14 +40,14 @@ type RpcxRegistry struct {
 	listenAddress string
 }
 
-func NewRpcxRegistry() (registry *RpcxRegistry) {
-	return &RpcxRegistry{
+func NewRpcxRegistry() (registry IRpcxService) {
+	return &RpcxService{
 		serviceClientPool: new(sync.Map),
 		rpcxServer:        server.NewServer(),
 	}
 }
 
-func (m *RpcxRegistry) InitConfig() (err error) {
+func (m *RpcxService) InitConfig() (err error) {
 	// loadTime := time.Now()
 	// 开起rpcx调试
 	if viper.GetBool("rpcx.debug") {
@@ -59,7 +59,7 @@ func (m *RpcxRegistry) InitConfig() (err error) {
 	return
 }
 
-func (m *RpcxRegistry) InitRpcx() (err error) {
+func (m *RpcxService) InitRpcx() (err error) {
 	port := 0
 	// loadTime := time.Now()
 	m.etcdAddress = viper.GetString("etcd.address")
@@ -97,22 +97,22 @@ func (m *RpcxRegistry) InitRpcx() (err error) {
 	return err
 }
 
-func (m *RpcxRegistry) RegisterName(serviceName string, rcvr interface{}, metadata string) (err error) {
+func (m *RpcxService) RegisterName(serviceName string, rcvr interface{}, metadata string) (err error) {
 	err = m.rpcxServer.RegisterName(serviceName, rcvr, metadata)
 	return
 }
 
-func (m *RpcxRegistry) RegisterFunction(servicePath string, fn interface{}, metadata string) (err error) {
+func (m *RpcxService) RegisterFunction(servicePath string, fn interface{}, metadata string) (err error) {
 	err = m.rpcxServer.RegisterFunction(servicePath, fn, metadata)
 	return
 }
 
-func (m *RpcxRegistry) RegisterFunctionName(servicePath string, fnName string, fn interface{}, metadata string) (err error) {
+func (m *RpcxService) RegisterFunctionName(servicePath string, fnName string, fn interface{}, metadata string) (err error) {
 	err = m.rpcxServer.RegisterFunctionName(servicePath, fnName, fn, metadata)
 	return
 }
 
-func (m *RpcxRegistry) GetClient(serviceName string, callback func(clt client.XClient) error) (err error) {
+func (m *RpcxService) GetClient(serviceName string, callback func(clt client.XClient) error) (err error) {
 	var rpcxClient client.XClient
 	if clientItem, exists := m.serviceClientPool.Load(serviceName); exists {
 		rpcxClient = clientItem.(client.XClient)
@@ -128,7 +128,7 @@ func (m *RpcxRegistry) GetClient(serviceName string, callback func(clt client.XC
 	return
 }
 
-func (m *RpcxRegistry) Serve() (err error) {
+func (m *RpcxService) Serve() (err error) {
 	go func() { // rpxc监听地址
 		err = m.rpcxServer.Serve("tcp", m.listenAddress)
 	}()
