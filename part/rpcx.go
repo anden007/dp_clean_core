@@ -40,7 +40,7 @@ type RpcxService struct {
 	listenAddress string
 }
 
-func NewRpcxRegistry() (registry IRpcxService) {
+func NewRpcxService() (registry IRpcxService) {
 	return &RpcxService{
 		serviceClientPool: new(sync.Map),
 		rpcxServer:        server.NewServer(),
