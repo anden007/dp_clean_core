@@ -78,7 +78,7 @@ func (m *Plugin) GenerateCode(data *codegen.Data) error {
 							}, buffer)
 							buffer.WriteTo(fileObj)
 						}
-						GenModelCode(object.Name, catalog, "all", false)
+						GenModelCode(object.Name, catalog, "all", m.overwrite)
 					}
 				}
 			}
