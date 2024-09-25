@@ -35,7 +35,7 @@ func NewJobCenter() IJobCenter {
 		defer gokv_redis_client.Close()
 		gf.Store = gokv_redis_client
 	} else {
-		misc.PrintErrorInfo(fmt.Sprintf("[JobCenter] GoFlow 初始化redis存储发生错误: %s", grcErr.Error()))
+		misc.PrintErrorInfo(fmt.Sprintf("[JobCenter] 任务中心初始化redis存储发生错误: %s", grcErr.Error()))
 	}
 	gf.Use(goflow.DefaultLogger())
 
@@ -53,6 +53,7 @@ func (m *JobCenter) RegisteJob(job func() *goflow.Job) {
 func (m *JobCenter) Run() {
 	if m.Enable {
 		gfPort := viper.GetInt("job_center.port")
+		misc.PrintInfo(fmt.Sprintf("[JobCenter] 任务中心开始运行，控制台: http://127.0.0.1:%d", gfPort))
 		go m.gfInstance.Run(fmt.Sprintf(":%d", gfPort))
 	}
 }
