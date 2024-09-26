@@ -89,7 +89,7 @@ func GenModelCode(modelName string, catalog string, target string, overwrite boo
 func genDelivery(modelName string, catalog string, overwrite bool) {
 	ca := stringy.New(catalog)
 	mo := stringy.New(modelName)
-	usecase := stringy.New(fmt.Sprintf("%sUsecase", mo.CamelCase())).LcFirst()
+	usecase := stringy.New(fmt.Sprintf("%sUsecase", mo.PascalCase().Get())).LcFirst()
 	content := jen.NewFile(fmt.Sprintf("%s_%s", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	// Import
 	content.ImportAlias("github.com/json-iterator/go", "jsoniter")
@@ -102,31 +102,31 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 	content.ImportAlias("github.com/anden007/dp_clean_core/misc", "misc")
 
 	// ViewModel
-	content.Type().Id(fmt.Sprintf("VM_%s", mo.CamelCase())).Struct(
+	content.Type().Id(fmt.Sprintf("VM_%s", mo.PascalCase().Get())).Struct(
 		jen.Qual("github.com/anden007/dp_clean_core/pkg/base", "BaseViewModel"),
-		jen.Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())),
+		jen.Qual("go-dp-clean/graph/model", mo.PascalCase().Get()),
 	)
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("VM_%s", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("VM_%s", mo.PascalCase().Get())),
 	).Id("ToViewModel").Params().Params(jen.Err().Error()).Block(
 		jen.Return(jen.Nil()),
 	)
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("VM_%s", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("VM_%s", mo.PascalCase().Get())),
 	).Id("ToDBModel").Params().Params(jen.Err().Error()).Block(
 		jen.Return(jen.Nil()),
 	).Line()
 	// Struct
-	content.Type().Id(fmt.Sprintf("%sHandler", mo.CamelCase())).Struct(
+	content.Type().Id(fmt.Sprintf("%sHandler", mo.PascalCase().Get())).Struct(
 		jen.Id("jsonEncoder").Qual("github.com/json-iterator/go", "API"),
 		jen.Id("jwt").Qual("github.com/anden007/dp_clean_core/part", "IJwtService"),
-		jen.Id(usecase).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sUsecase", mo.CamelCase())),
+		jen.Id(usecase).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sUsecase", mo.PascalCase().Get())),
 	).Line()
 	// New
 	content.Func().Id("NewHttpHandler").Params(
 		jen.Id("party").Qual("github.com/kataras/iris/v12", "Party"),
 		jen.Id("jwt").Qual("github.com/anden007/dp_clean_core/part", "IJwtService"),
-		jen.Id(usecase).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sUsecase", mo.CamelCase())),
+		jen.Id(usecase).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sUsecase", mo.PascalCase().Get())),
 	).Block(
 		jen.Comment("根据当前模块挂载路径,修改Swagger中API请求路径"),
 		jen.Qual("go-dp-clean/docs", "SwaggerInfo").Dot("SwaggerTemplate").Op("=").Qual("github.com/anden007/dp_clean_core/misc", "ProcessSwaggerTemplate").Params(
@@ -135,7 +135,7 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 			jen.Id("party").Dot("GetRelPath").Call(),
 		),
 		jen.Line(),
-		jen.Id("handler").Op(":= &").Id(fmt.Sprintf("%sHandler", mo.CamelCase())).Values(
+		jen.Id("handler").Op(":= &").Id(fmt.Sprintf("%sHandler", mo.PascalCase().Get())).Values(
 			jen.Dict{
 				jen.Id("jsonEncoder"): jen.Qual("github.com/liamylian/jsontime/v2/v2", "ConfigWithCustomTimeFormat"),
 				jen.Id("jwt"):         jen.Id("jwt"),
@@ -170,7 +170,7 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 	// Add
 	content.Comment(fmt.Sprintf("@Summary %s Add", modelName))
 	content.Comment("@Description 添加数据")
-	content.Comment(fmt.Sprintf("@Tags %s", ca.CamelCase()))
+	content.Comment(fmt.Sprintf("@Tags %s", ca.PascalCase().Get()))
 	content.Comment("@Accept json")
 	content.Comment("@Produce json")
 	content.Comment("@Param JsonData body string true \"body参数(payload)\"")
@@ -178,14 +178,14 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 	content.Comment("@Failure 500 {object} pkg.APIErrorResult")
 	content.Comment(fmt.Sprintf("@Router /_%s_%s_path_/%s/add [post]", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.PascalCase().Get())),
 	).Id("Add").Params(
 		jen.Id("ctx").Qual("github.com/kataras/iris/v12", "Context"),
 	).Block(
 		jen.Var().Id("err").Error(),
 		jen.Id("success").Op(":=").True(),
 		jen.Id("message").Op(":=").Lit(""),
-		jen.Id("vModel").Op(":=").Id(fmt.Sprintf("VM_%s", mo.CamelCase())).Values(),
+		jen.Id("vModel").Op(":=").Id(fmt.Sprintf("VM_%s", mo.PascalCase().Get())).Values(),
 		jen.If(
 			jen.Err().Op("=").Qual("github.com/anden007/dp_clean_core/misc", "ReadBody").Call(
 				jen.Id("ctx"), jen.Op("&").Id("vModel"),
@@ -193,7 +193,7 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 			jen.Err().Op("==").Nil(),
 		).Block(
 			jen.Id("eCtx").Op(":=").Id("m").Dot("jwt").Dot("GetExecutorContext").Call(jen.Id("ctx")),
-			jen.Err().Op("=").Id("m").Dot(usecase).Dot("Add").Call(jen.Id("vModel").Dot(fmt.Sprintf("%s", mo.CamelCase())), jen.Id("eCtx"), jen.Lit("")),
+			jen.Err().Op("=").Id("m").Dot(usecase).Dot("Add").Call(jen.Id("vModel").Dot(mo.PascalCase().Get()), jen.Id("eCtx"), jen.Lit("")),
 		),
 		jen.If(
 			jen.Id("err").Op("!=").Nil(),
@@ -214,7 +214,7 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 	// DelByIds
 	content.Comment(fmt.Sprintf("@Summary %s DelByIds", modelName))
 	content.Comment("@Description 删除数据")
-	content.Comment(fmt.Sprintf("@Tags %s", ca.CamelCase()))
+	content.Comment(fmt.Sprintf("@Tags %s", ca.PascalCase().Get()))
 	content.Comment("@Accept x-www-form-urlencoded")
 	content.Comment("@Produce json")
 	content.Comment("@Param ids formData string true \"要删除的数据IDs, 半角逗号分隔\"")
@@ -222,7 +222,7 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 	content.Comment("@Failure 500 {object} pkg.APIErrorResult")
 	content.Comment(fmt.Sprintf("@Router /_%s_%s_path_/%s/delByIds [post]", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.PascalCase().Get())),
 	).Id("DelByIds").Params(
 		jen.Id("ctx").Qual("github.com/kataras/iris/v12", "Context"),
 	).Block(
@@ -256,7 +256,7 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 	// Edit
 	content.Comment(fmt.Sprintf("@Summary %s Edit", modelName))
 	content.Comment("@Description 编辑数据")
-	content.Comment(fmt.Sprintf("@Tags %s", ca.CamelCase()))
+	content.Comment(fmt.Sprintf("@Tags %s", ca.PascalCase().Get()))
 	content.Comment("@Accept json")
 	content.Comment("@Produce json")
 	content.Comment("@Param JsonData body string true \"body参数(payload)\"")
@@ -264,13 +264,13 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 	content.Comment("@Failure 500 {object} pkg.APIErrorResult")
 	content.Comment(fmt.Sprintf("@Router /_%s_%s_path_/%s/edit [post]", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.PascalCase().Get())),
 	).Id("Edit").Params(
 		jen.Id("ctx").Qual("github.com/kataras/iris/v12", "Context"),
 	).Block(
 		jen.Id("success").Op(":=").True(),
 		jen.Id("message").Op(":=").Lit(""),
-		jen.Id("vModel").Op(":=").Id(fmt.Sprintf("VM_%s", mo.CamelCase())).Values(),
+		jen.Id("vModel").Op(":=").Id(fmt.Sprintf("VM_%s", mo.PascalCase().Get())).Values(),
 		jen.Err().Op(":=").Qual("github.com/anden007/dp_clean_core/misc", "ReadBody").Call(
 			jen.Id("ctx"), jen.Op("&").Id("vModel"),
 		),
@@ -278,7 +278,7 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 			jen.Err().Op("==").Nil(),
 		).Block(
 			jen.Id("eCtx").Op(":=").Id("m").Dot("jwt").Dot("GetExecutorContext").Call(jen.Id("ctx")),
-			jen.Err().Op("=").Id("m").Dot(usecase).Dot("Edit").Call(jen.Id("vModel").Dot(fmt.Sprintf("%s", mo.CamelCase())), jen.Id("eCtx"), jen.Lit("")),
+			jen.Err().Op("=").Id("m").Dot(usecase).Dot("Edit").Call(jen.Id("vModel").Dot(mo.PascalCase().Get()), jen.Id("eCtx"), jen.Lit("")),
 		),
 		jen.If(
 			jen.Id("err").Op("!=").Nil(),
@@ -299,7 +299,7 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 	// GetById
 	content.Comment(fmt.Sprintf("@Summary %s GetById", modelName))
 	content.Comment("@Description 根据Id查询数据")
-	content.Comment(fmt.Sprintf("@Tags %s", ca.CamelCase()))
+	content.Comment(fmt.Sprintf("@Tags %s", ca.PascalCase().Get()))
 	content.Comment("@Accept x-www-form-urlencoded")
 	content.Comment("@Produce json")
 	content.Comment("@Param id path string true \"数据Id\"")
@@ -307,21 +307,21 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 	content.Comment("@Failure 500 {object} pkg.APIErrorResult")
 	content.Comment(fmt.Sprintf("@Router /_%s_%s_path_/%s/getById/{id} [get]", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.PascalCase().Get())),
 	).Id("GetById").Params(
 		jen.Id("ctx").Qual("github.com/kataras/iris/v12", "Context"),
 	).Block(
 		jen.Id("success").Op(":=").True(),
 		jen.Id("message").Op(":=").Lit(""),
-		jen.Var().Id("result").Op("*").Id(fmt.Sprintf("VM_%s", mo.CamelCase())),
+		jen.Var().Id("result").Op("*").Id(fmt.Sprintf("VM_%s", mo.PascalCase().Get())),
 		jen.Id("id").Op(":=").Id("ctx").Dot("Params").Call().Dot("Get").Call(jen.Lit("id")),
 		jen.List(jen.Id("dbResult"), jen.Err()).Op(":=").Id("m").Dot(usecase).Dot("GetById").Call(jen.Id("id")),
 		jen.If(
 			jen.Id("err").Op("==").Nil(),
 		).Block(
 			jen.List(jen.Id("result"), jen.Err()).Op("=").Qual("github.com/anden007/dp_clean_core/misc", "DBModel2View").Index(
-				jen.List(jen.Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())),
-					jen.Op("*").Id(fmt.Sprintf("VM_%s", mo.CamelCase())),
+				jen.List(jen.Qual("go-dp-clean/graph/model", mo.PascalCase().Get()),
+					jen.Op("*").Id(fmt.Sprintf("VM_%s", mo.PascalCase().Get())),
 				),
 			).Params(jen.Id("dbResult")),
 		),
@@ -345,27 +345,27 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 	// GetAll
 	content.Comment(fmt.Sprintf("@Summary %s GetAll", modelName))
 	content.Comment("@Description 查询所有数据")
-	content.Comment(fmt.Sprintf("@Tags %s", ca.CamelCase()))
+	content.Comment(fmt.Sprintf("@Tags %s", ca.PascalCase().Get()))
 	content.Comment("@Accept x-www-form-urlencoded")
 	content.Comment("@Produce json")
 	content.Comment("@Success 200 {object} pkg.APIResult")
 	content.Comment("@Failure 500 {object} pkg.APIErrorResult")
 	content.Comment(fmt.Sprintf("@Router /_%s_%s_path_/%s/getAll [get]", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.PascalCase().Get())),
 	).Id("GetAll").Params(
 		jen.Id("ctx").Qual("github.com/kataras/iris/v12", "Context"),
 	).Block(
 		jen.Id("success").Op(":=").True(),
 		jen.Id("message").Op(":=").Lit(""),
-		jen.Var().Id("result").Index().Op("*").Id(fmt.Sprintf("VM_%s", mo.CamelCase())),
+		jen.Var().Id("result").Index().Op("*").Id(fmt.Sprintf("VM_%s", mo.PascalCase().Get())),
 		jen.List(jen.Id("dbResult"), jen.Err()).Op(":=").Id("m").Dot(usecase).Dot("GetAll").Call(),
 		jen.If(
 			jen.Id("err").Op("==").Nil(),
 		).Block(
 			jen.List(jen.Id("result"), jen.Err()).Op("=").Qual("github.com/anden007/dp_clean_core/misc", "DBModelList2ViewList").Index(
-				jen.List(jen.Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())),
-					jen.Op("*").Id(fmt.Sprintf("VM_%s", mo.CamelCase())),
+				jen.List(jen.Qual("go-dp-clean/graph/model", mo.PascalCase().Get()),
+					jen.Op("*").Id(fmt.Sprintf("VM_%s", mo.PascalCase().Get())),
 				),
 			).Params(jen.Id("dbResult")),
 		),
@@ -389,7 +389,7 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 	// GetByCondition
 	content.Comment(fmt.Sprintf("@Summary %s GetByCondition", modelName))
 	content.Comment("@Description 根据条件查询数据")
-	content.Comment(fmt.Sprintf("@Tags %s", ca.CamelCase()))
+	content.Comment(fmt.Sprintf("@Tags %s", ca.PascalCase().Get()))
 	content.Comment("@Accept json")
 	content.Comment("@Produce json")
 	content.Comment("@Param JsonData body string true \"body参数(payload)\"")
@@ -397,14 +397,14 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 	content.Comment("@Failure 500 {object} pkg.APIErrorResult")
 	content.Comment(fmt.Sprintf("@Router /_%s_%s_path_/%s/getByCondition [post]", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.PascalCase().Get())),
 	).Id("GetByCondition").Params(
 		jen.Id("ctx").Qual("github.com/kataras/iris/v12", "Context"),
 	).Block(
 		jen.Var().Id("err").Error(),
 		jen.Var().Id("total").Int64().Op("=").Lit(0),
-		jen.Var().Id("result").Index().Op("*").Id(fmt.Sprintf("VM_%s", mo.CamelCase())),
-		jen.Var().Id("dbResult").Index().Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())),
+		jen.Var().Id("result").Index().Op("*").Id(fmt.Sprintf("VM_%s", mo.PascalCase().Get())),
+		jen.Var().Id("dbResult").Index().Qual("go-dp-clean/graph/model", mo.PascalCase().Get()),
 		jen.Id("success").Op(":=").True(),
 		jen.Id("message").Op(":=").Lit(""),
 		jen.If(
@@ -424,8 +424,8 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 					jen.Err().Op("==").Nil(),
 				).Block(
 					jen.List(jen.Id("result"), jen.Err()).Op("=").Qual("github.com/anden007/dp_clean_core/misc", "DBModelList2ViewList").Index(
-						jen.List(jen.Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())),
-							jen.Op("*").Id(fmt.Sprintf("VM_%s", mo.CamelCase())),
+						jen.List(jen.Qual("go-dp-clean/graph/model", mo.PascalCase().Get()),
+							jen.Op("*").Id(fmt.Sprintf("VM_%s", mo.PascalCase().Get())),
 						),
 					).Params(jen.Id("dbResult")),
 				),
@@ -467,7 +467,7 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 	content.ImportAlias("github.com/anden007/dp_clean_core/pkg", "pkg")
 	content.ImportAlias("github.com/anden007/dp_clean_core/misc", "misc")
 	// Struct
-	content.Type().Id(fmt.Sprintf("%sRepository", mo.CamelCase())).Struct(
+	content.Type().Id(fmt.Sprintf("%sRepository", mo.PascalCase().Get())).Struct(
 		jen.Id("db").Qual("github.com/anden007/dp_clean_core/part", "IDataBase"),
 		jen.Id("dataLogger").Qual("github.com/anden007/dp_clean_core/part", "IDataLogger"),
 	).Line()
@@ -475,11 +475,11 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 	content.Func().Id("NewRepository").Params(
 		jen.Id("db").Qual("github.com/anden007/dp_clean_core/part", "IDataBase"),
 		jen.Id("dataLogger").Qual("github.com/anden007/dp_clean_core/part", "IDataLogger"),
-	).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sRepository", mo.CamelCase())).Block(
+	).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sRepository", mo.PascalCase().Get())).Block(
 		jen.If(jen.Qual("github.com/anden007/dp_clean_core/part", "ENV").Op("==").Qual("github.com/anden007/dp_clean_core/part", "ENUM_ENV_DEV").Op("&&").Qual("github.com/spf13/viper", "GetBool").Params(jen.Lit("mysql.auto_migrate"))).Block(
-			jen.Id("db").Dot("GetDB").Call().Dot("AutoMigrate").Params(jen.Op("&").Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())).Values()),
+			jen.Id("db").Dot("GetDB").Call().Dot("AutoMigrate").Params(jen.Op("&").Qual("go-dp-clean/graph/model", mo.PascalCase().Get()).Values()),
 		),
-		jen.Return().Op("&").Id(fmt.Sprintf("%sRepository", mo.CamelCase())).Values(
+		jen.Return().Op("&").Id(fmt.Sprintf("%sRepository", mo.PascalCase().Get())).Values(
 			jen.Dict{
 				jen.Id("db"):         jen.Id("db"),
 				jen.Id("dataLogger"): jen.Id("dataLogger"),
@@ -488,9 +488,9 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 	).Line()
 	// Add
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.PascalCase().Get())),
 	).Id("Add").Params(
-		jen.Id("entity").Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())),
+		jen.Id("entity").Qual("go-dp-clean/graph/model", mo.PascalCase().Get()),
 		jen.Id("ctx").Qual("context", "Context"),
 		jen.Id("transId").String(),
 	).Parens(
@@ -522,7 +522,7 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 	).Line()
 	// DelByIds
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.PascalCase().Get())),
 	).Id("DelByIds").Params(
 		jen.Id("ids").Index().String(),
 		jen.Id("ctx").Qual("context", "Context"),
@@ -543,7 +543,7 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 					jen.Id("gErr").Op("==").Nil(),
 				).Block(
 					jen.Err().Op("=").Id("tx").Dot("Delete").Call(
-						jen.Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())).Values(),
+						jen.Qual("go-dp-clean/graph/model", mo.PascalCase().Get()).Values(),
 						jen.Lit("id in (?)"),
 						jen.Id("ids"),
 					).Dot("Error"),
@@ -557,7 +557,7 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 				),
 			).Else().Block(
 				jen.Err().Op("=").Id("m").Dot("db").Dot("GetDB").Call().Dot("Delete").Call(
-					jen.Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())).Values(),
+					jen.Qual("go-dp-clean/graph/model", mo.PascalCase().Get()).Values(),
 					jen.Lit("id in (?)"),
 					jen.Id("ids"),
 				).Dot("Error"),
@@ -574,9 +574,9 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 	).Line()
 	// Edit
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.PascalCase().Get())),
 	).Id("Edit").Params(
-		jen.Id("entity").Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())),
+		jen.Id("entity").Qual("go-dp-clean/graph/model", mo.PascalCase().Get()),
 		jen.Id("ctx").Qual("context", "Context"),
 		jen.Id("transId").String(),
 	).Parens(
@@ -614,7 +614,7 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 	).Line()
 	// Updates
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.PascalCase().Get())),
 	).Id("Updates").Params(
 		jen.Id("id").String(),
 		jen.Id("fieldValues").Map(jen.String()).Interface(),
@@ -636,7 +636,7 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 					jen.Id("gErr").Op("==").Nil(),
 				).Block(
 					jen.Err().Op("=").Id("tx").Dot("Model").Call(
-						jen.Op("&").Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())).Values(),
+						jen.Op("&").Qual("go-dp-clean/graph/model", mo.PascalCase().Get()).Values(),
 					).Dot("Where").Call(
 						jen.Lit("id = ?"),
 						jen.Id("id"),
@@ -649,7 +649,7 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 				),
 			).Else().Block(
 				jen.Err().Op("=").Id("m").Dot("db").Dot("GetDB").Call().Dot("Model").Call(
-					jen.Op("&").Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())).Values(),
+					jen.Op("&").Qual("go-dp-clean/graph/model", mo.PascalCase().Get()).Values(),
 				).Dot("Where").Call(
 					jen.Lit("id = ?"),
 					jen.Id("id"),
@@ -665,31 +665,31 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 	).Line()
 	// GetAll
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.PascalCase().Get())),
 	).Id("GetAll").Params().Parens(
 		jen.List(
-			jen.Id("result").Index().Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())),
+			jen.Id("result").Index().Qual("go-dp-clean/graph/model", mo.PascalCase().Get()),
 			jen.Err().Error(),
 		),
 	).Block(
 		jen.Err().Op("=").Id("m").Dot("db").Dot("GetDB").Call().Dot("Model").Call(
-			jen.Op("&").Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())).Values(),
+			jen.Op("&").Qual("go-dp-clean/graph/model", mo.PascalCase().Get()).Values(),
 		).Dot("Find").Call(jen.Op("&").Id("result")).Dot("Error"),
 		jen.Return(),
 	).Line()
 	// GetById
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.PascalCase().Get())),
 	).Id("GetById").Params(
 		jen.Id("id").String(),
 	).Parens(
 		jen.List(
-			jen.Id("result").Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())),
+			jen.Id("result").Qual("go-dp-clean/graph/model", mo.PascalCase().Get()),
 			jen.Err().Error(),
 		),
 	).Block(
 		jen.Err().Op("=").Id("m").Dot("db").Dot("GetDB").Call().Dot("Model").Call(
-			jen.Op("&").Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())).Values(),
+			jen.Op("&").Qual("go-dp-clean/graph/model", mo.PascalCase().Get()).Values(),
 		).Dot("Where").Call(
 			jen.Lit("id = ?"),
 			jen.Id("id"),
@@ -698,17 +698,17 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 	).Line()
 	// GetByIds
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.PascalCase().Get())),
 	).Id("GetByIds").Params(
 		jen.Id("ids").Index().String(),
 	).Parens(
 		jen.List(
-			jen.Id("result").Index().Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())),
+			jen.Id("result").Index().Qual("go-dp-clean/graph/model", mo.PascalCase().Get()),
 			jen.Err().Error(),
 		),
 	).Block(
 		jen.Err().Op("=").Id("m").Dot("db").Dot("GetDB").Call().Dot("Model").Call(
-			jen.Op("&").Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())).Values(),
+			jen.Op("&").Qual("go-dp-clean/graph/model", mo.PascalCase().Get()).Values(),
 		).Dot("Where").Call(
 			jen.Lit("id in (?)"),
 			jen.Id("ids"),
@@ -717,26 +717,26 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 	).Line()
 	// GetByCondition
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.PascalCase().Get())),
 	).Id("GetByCondition").Params(
 		jen.Id("condition").Map(jen.String()).Qual("github.com/anden007/dp_clean_core/pkg", "SearchCondition"),
 	).Parens(
 		jen.List(
-			jen.Id("result").Index().Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())),
+			jen.Id("result").Index().Qual("go-dp-clean/graph/model", mo.PascalCase().Get()),
 			jen.Id("total").Int64(),
 			jen.Err().Error(),
 		),
 	).Block(
 		jen.Id("query").Op(":=").Id("m").Dot("db").Dot("GetDB").Call().Dot("Model").Call(
-			jen.Op("&").Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())).Values(),
+			jen.Op("&").Qual("go-dp-clean/graph/model", mo.PascalCase().Get()).Values(),
 		),
 		jen.Id("countQuery").Op(":=").Id("m").Dot("db").Dot("GetDB").Call().Dot("Model").Call(
-			jen.Op("&").Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())).Values(),
+			jen.Op("&").Qual("go-dp-clean/graph/model", mo.PascalCase().Get()).Values(),
 		),
 		jen.Err().Op("=").Qual("github.com/anden007/dp_clean_core/pkg", "NewQueryCondition").Call(
 			jen.Qual("go-dp-clean/graph/model", "ModelDBFields"),
 		).Dot("GetQuery").Call(
-			jen.Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())).Values().Dot("TableName").Call(),
+			jen.Qual("go-dp-clean/graph/model", mo.PascalCase().Get()).Values().Dot("TableName").Call(),
 			jen.Id("condition"),
 			jen.Id("query"),
 			jen.Id("countQuery"),
@@ -753,7 +753,7 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 	).Line()
 	// Commit
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.PascalCase().Get())),
 	).Id("Commit").Params(
 		jen.Id("transId").String(),
 	).Parens(
@@ -764,7 +764,7 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 	).Line()
 	// Rollback
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sRepository", mo.PascalCase().Get())),
 	).Id("Rollback").Params(
 		jen.Id("transId").String(),
 	).Parens(
@@ -779,20 +779,20 @@ func genRepository(modelName string, catalog string, overwrite bool) {
 func genUsecase(modelName string, catalog string, overwrite bool) {
 	ca := stringy.New(catalog)
 	mo := stringy.New(modelName)
-	repo := stringy.New(fmt.Sprintf("%sRepo", mo.CamelCase())).LcFirst()
+	repo := stringy.New(fmt.Sprintf("%sRepo", mo.PascalCase().Get())).LcFirst()
 	content := jen.NewFile(fmt.Sprintf("%s_%s", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	// Import
 	content.ImportAlias("go-dp-clean/graph/model", "model")
 	content.ImportAlias("github.com/anden007/dp_clean_core/pkg", "pkg")
 	// Struct
-	content.Type().Id(fmt.Sprintf("%sUsecase", mo.CamelCase())).Struct(
-		jen.Id(repo).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sRepository", mo.CamelCase())),
+	content.Type().Id(fmt.Sprintf("%sUsecase", mo.PascalCase().Get())).Struct(
+		jen.Id(repo).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sRepository", mo.PascalCase().Get())),
 	).Line()
 	// New
 	content.Func().Id("NewUsecase").Params(
-		jen.Id(repo).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sRepository", mo.CamelCase())),
-	).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sUsecase", mo.CamelCase())).Block(
-		jen.Return().Op("&").Id(fmt.Sprintf("%sUsecase", mo.CamelCase())).Values(
+		jen.Id(repo).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sRepository", mo.PascalCase().Get())),
+	).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sUsecase", mo.PascalCase().Get())).Block(
+		jen.Return().Op("&").Id(fmt.Sprintf("%sUsecase", mo.PascalCase().Get())).Values(
 			jen.Dict{
 				jen.Id(repo): jen.Id(repo),
 			},
@@ -800,9 +800,9 @@ func genUsecase(modelName string, catalog string, overwrite bool) {
 	).Line()
 	// Add
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.PascalCase().Get())),
 	).Id("Add").Params(
-		jen.Id("entity").Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())),
+		jen.Id("entity").Qual("go-dp-clean/graph/model", mo.PascalCase().Get()),
 		jen.Id("ctx").Qual("context", "Context"),
 		jen.Id("transId").String(),
 	).Parens(
@@ -814,7 +814,7 @@ func genUsecase(modelName string, catalog string, overwrite bool) {
 	).Line()
 	// DelByIds
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.PascalCase().Get())),
 	).Id("DelByIds").Params(
 		jen.Id("ids").Index().String(),
 		jen.Id("ctx").Qual("context", "Context"),
@@ -828,9 +828,9 @@ func genUsecase(modelName string, catalog string, overwrite bool) {
 	).Line()
 	// Edit
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.PascalCase().Get())),
 	).Id("Edit").Params(
-		jen.Id("entity").Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())),
+		jen.Id("entity").Qual("go-dp-clean/graph/model", mo.PascalCase().Get()),
 		jen.Id("ctx").Qual("context", "Context"),
 		jen.Id("transId").String(),
 	).Parens(
@@ -842,7 +842,7 @@ func genUsecase(modelName string, catalog string, overwrite bool) {
 	).Line()
 	// Updates
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.PascalCase().Get())),
 	).Id("Updates").Params(
 		jen.Id("id").String(),
 		jen.Id("fieldValues").Map(jen.String()).Interface(),
@@ -857,10 +857,10 @@ func genUsecase(modelName string, catalog string, overwrite bool) {
 	).Line()
 	// GetAll
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.PascalCase().Get())),
 	).Id("GetAll").Params().Parens(
 		jen.List(
-			jen.Id("result").Index().Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())),
+			jen.Id("result").Index().Qual("go-dp-clean/graph/model", mo.PascalCase().Get()),
 			jen.Err().Error(),
 		),
 	).Block(
@@ -868,10 +868,10 @@ func genUsecase(modelName string, catalog string, overwrite bool) {
 	).Line()
 	// GetById
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.PascalCase().Get())),
 	).Id("GetById").Params(jen.Id("id").String()).Parens(
 		jen.List(
-			jen.Id("result").Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())),
+			jen.Id("result").Qual("go-dp-clean/graph/model", mo.PascalCase().Get()),
 			jen.Err().Error(),
 		),
 	).Block(
@@ -879,10 +879,10 @@ func genUsecase(modelName string, catalog string, overwrite bool) {
 	).Line()
 	// GetByIds
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.PascalCase().Get())),
 	).Id("GetByIds").Params(jen.Id("ids").Index().String()).Parens(
 		jen.List(
-			jen.Id("result").Index().Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())),
+			jen.Id("result").Index().Qual("go-dp-clean/graph/model", mo.PascalCase().Get()),
 			jen.Err().Error(),
 		),
 	).Block(
@@ -890,12 +890,12 @@ func genUsecase(modelName string, catalog string, overwrite bool) {
 	).Line()
 	// GetByCondition
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.PascalCase().Get())),
 	).Id("GetByCondition").Params(
 		jen.Id("condition").Map(jen.String()).Qual("github.com/anden007/dp_clean_core/pkg", "SearchCondition"),
 	).Parens(
 		jen.List(
-			jen.Id("result").Index().Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase())),
+			jen.Id("result").Index().Qual("go-dp-clean/graph/model", mo.PascalCase().Get()),
 			jen.Id("total").Int64(),
 			jen.Err().Error(),
 		),
@@ -904,7 +904,7 @@ func genUsecase(modelName string, catalog string, overwrite bool) {
 	).Line()
 	// Commit
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.PascalCase().Get())),
 	).Id("Commit").Params(jen.Id("transId").String()).Parens(
 		jen.Err().Error(),
 	).Block(
@@ -912,7 +912,7 @@ func genUsecase(modelName string, catalog string, overwrite bool) {
 	).Line()
 	// Rollback
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.PascalCase().Get())),
 	).Id("Rollback").Params(jen.Id("transId").String()).Parens(
 		jen.Err().Error(),
 	).Block(
@@ -924,18 +924,18 @@ func genUsecase(modelName string, catalog string, overwrite bool) {
 func genFsm(modelName string, catalog string, overwrite bool) {
 	ca := stringy.New(catalog)
 	mo := stringy.New(modelName)
-	usecase := stringy.New(fmt.Sprintf("%sUsecase", mo.CamelCase())).LcFirst()
+	usecase := stringy.New(fmt.Sprintf("%sUsecase", mo.PascalCase().Get())).LcFirst()
 	content := jen.NewFile(fmt.Sprintf("%s_%s", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	// Import
 	content.ImportAlias("github.com/smallnest/gofsm", "fsm")
 	// New
 	content.Func().Id("NewFsm").Params(
 		jen.Id("ctx").Qual("context", "Context"),
-		jen.Id(usecase).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sUsecase", mo.CamelCase())),
+		jen.Id(usecase).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sUsecase", mo.PascalCase().Get())),
 	).Op("*").Qual("github.com/smallnest/gofsm", "StateMachine").Block(
 		jen.Id("delegate").Op(":=").Op("&").Qual("github.com/smallnest/gofsm", "DefaultDelegate").Values(
 			jen.Dict{
-				jen.Id("P"): jen.Op("&").Id(fmt.Sprintf("%sEventProcessor", mo.CamelCase())).Values(
+				jen.Id("P"): jen.Op("&").Id(fmt.Sprintf("%sEventProcessor", mo.PascalCase().Get())).Values(
 					jen.Dict{
 						jen.Id("ctx"):   jen.Id("ctx"),
 						jen.Id(usecase): jen.Id(usecase),
@@ -964,17 +964,17 @@ func genFsm(modelName string, catalog string, overwrite bool) {
 		jen.Return(jen.Qual("github.com/smallnest/gofsm", "NewStateMachine").Call(jen.Id("delegate"), jen.Id("transitions").Op("..."))),
 	).Line()
 	// Struct
-	content.Type().Id(fmt.Sprintf("%sEventProcessor", mo.CamelCase())).Struct(
+	content.Type().Id(fmt.Sprintf("%sEventProcessor", mo.PascalCase().Get())).Struct(
 		jen.Id("ctx").Qual("context", "Context"),
-		jen.Id(usecase).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sUsecase", mo.CamelCase())),
+		jen.Id(usecase).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sUsecase", mo.PascalCase().Get())),
 	).Line()
 	// Action
 	content.Comment("当尝试执行Action时执行,可在此方法中对数据进行检查,检查失败则toState状态的OnEnter事件不会执行,而是触发执行OnActionFailure方法")
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sEventProcessor", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sEventProcessor", mo.PascalCase().Get())),
 	).Id("Action").Params(jen.Id("action").String(), jen.Id("fromState").String(), jen.Id("toState").String(), jen.Id("args").Index().Interface()).Error().Block(
 		jen.If(jen.Id("action").Op("==").Lit("Check")).Block(
-			jen.Id("entity").Op(":=").Id("args").Index(jen.Id("0")).Op(".").Params(jen.Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase()))),
+			jen.Id("entity").Op(":=").Id("args").Index(jen.Id("0")).Op(".").Params(jen.Qual("go-dp-clean/graph/model", mo.PascalCase().Get())),
 			jen.If(jen.Id("entity").Dot("Title").Op("==").Lit("")).Block(
 				jen.Return(jen.Qual("errors", "New").Params(jen.Lit("必须输入标题"))),
 			),
@@ -984,20 +984,20 @@ func genFsm(modelName string, catalog string, overwrite bool) {
 	// OnExit
 	content.Comment("当退出状态时执行")
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sEventProcessor", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sEventProcessor", mo.PascalCase().Get())),
 	).Id("OnExit").Params(jen.Id("fromState").String(), jen.Id("args").Index().Interface()).Block(
 		jen.Qual("fmt", "Printf").Params(jen.Lit("OnExit: %s\n"), jen.Id("fromState")),
 	).Line()
 	// OnEnter
 	content.Comment("当进入状态时执行，可用于数据库状态修改、短信通知等")
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sEventProcessor", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sEventProcessor", mo.PascalCase().Get())),
 	).Id("OnEnter").Params(jen.Id("toState").String(), jen.Id("args").Index().Interface()).Block(
 		jen.Qual("fmt", "Printf").Params(jen.Lit("OnEnter: %s\n"), jen.Id("toState")),
 		jen.If(
 			jen.Len(jen.Id("args")).Op(">").Id("0"),
 		).Block(
-			jen.Id("entity").Op(":=").Id("args").Index(jen.Id("0")).Op(".").Params(jen.Qual("go-dp-clean/graph/model", fmt.Sprintf("%s", mo.CamelCase()))),
+			jen.Id("entity").Op(":=").Id("args").Index(jen.Id("0")).Op(".").Params(jen.Qual("go-dp-clean/graph/model", mo.PascalCase().Get())),
 			jen.Id("m").Dot(usecase).Dot("Updates").Call(jen.Id("entity").Dot("Id"), jen.Map(jen.String()).Interface().Values(
 				jen.Dict{
 					jen.Lit("state"): jen.Id("toState"),
@@ -1008,7 +1008,7 @@ func genFsm(modelName string, catalog string, overwrite bool) {
 	// OnActionFailure
 	content.Comment("当Action发生错误时执行")
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sEventProcessor", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sEventProcessor", mo.PascalCase().Get())),
 	).Id("OnActionFailure").Params(jen.Id("action").String(), jen.Id("fromState").String(), jen.Id("toState").String(), jen.Id("args").Index().Interface(), jen.Err().Error()).Block(
 		//fmt.Printf("OnActionFailure: %s|%s -> %s|%s\n", action, fromState, toState, err.Error())
 		jen.Qual("fmt", "Printf").Params(jen.Lit("OnActionFailure: %s|%s -> %s|%s\n"), jen.Id("action"), jen.Id("fromState"), jen.Id("toState"), jen.Id("err").Dot("Error").Call()),
@@ -1078,7 +1078,7 @@ func genCustomModule(modelName string, catalog string, overwrite bool) {
 func genCustomDelivery(modelName string, catalog string, overwrite bool) {
 	ca := stringy.New(catalog)
 	mo := stringy.New(modelName)
-	usecase := stringy.New(fmt.Sprintf("%sUsecase", mo.CamelCase())).LcFirst()
+	usecase := stringy.New(fmt.Sprintf("%sUsecase", mo.PascalCase().Get())).LcFirst()
 	content := jen.NewFile(fmt.Sprintf("%s_%s", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	// Import
 	content.ImportAlias("github.com/json-iterator/go", "jsoniter")
@@ -1091,16 +1091,16 @@ func genCustomDelivery(modelName string, catalog string, overwrite bool) {
 	content.ImportAlias("github.com/anden007/dp_clean_core/misc", "misc")
 
 	// Struct
-	content.Type().Id(fmt.Sprintf("%sHandler", mo.CamelCase())).Struct(
+	content.Type().Id(fmt.Sprintf("%sHandler", mo.PascalCase().Get())).Struct(
 		jen.Id("jsonEncoder").Qual("github.com/json-iterator/go", "API"),
 		jen.Id("jwt").Qual("github.com/anden007/dp_clean_core/part", "IJwtService"),
-		jen.Id(usecase).Id(fmt.Sprintf("I%sUsecase", mo.CamelCase())),
+		jen.Id(usecase).Id(fmt.Sprintf("I%sUsecase", mo.PascalCase().Get())),
 	).Line()
 	// New
 	content.Func().Id("NewHttpHandler").Params(
 		jen.Id("party").Qual("github.com/kataras/iris/v12", "Party"),
 		jen.Id("jwt").Qual("github.com/anden007/dp_clean_core/part", "IJwtService"),
-		jen.Id(usecase).Id(fmt.Sprintf("I%sUsecase", mo.CamelCase())),
+		jen.Id(usecase).Id(fmt.Sprintf("I%sUsecase", mo.PascalCase().Get())),
 	).Block(
 		jen.Comment("根据当前模块挂载路径,修改Swagger中API请求路径"),
 		jen.Qual("go-dp-clean/docs", "SwaggerInfo").Dot("SwaggerTemplate").Op("=").Qual("github.com/anden007/dp_clean_core/misc", "ProcessSwaggerTemplate").Params(
@@ -1109,7 +1109,7 @@ func genCustomDelivery(modelName string, catalog string, overwrite bool) {
 			jen.Id("party").Dot("GetRelPath").Call(),
 		),
 		jen.Line(),
-		jen.Id("handler").Op(":= &").Id(fmt.Sprintf("%sHandler", mo.CamelCase())).Values(
+		jen.Id("handler").Op(":= &").Id(fmt.Sprintf("%sHandler", mo.PascalCase().Get())).Values(
 			jen.Dict{
 				jen.Id("jsonEncoder"): jen.Qual("github.com/liamylian/jsontime/v2/v2", "ConfigWithCustomTimeFormat"),
 				jen.Id("jwt"):         jen.Id("jwt"),
@@ -1124,14 +1124,14 @@ func genCustomDelivery(modelName string, catalog string, overwrite bool) {
 	// Custom
 	content.Comment(fmt.Sprintf("@Summary %s Custom", modelName))
 	content.Comment("@Description 请修改")
-	content.Comment(fmt.Sprintf("@Tags %s", ca.CamelCase()))
+	content.Comment(fmt.Sprintf("@Tags %s", ca.PascalCase().Get()))
 	content.Comment("@Accept json")
 	content.Comment("@Produce json")
 	content.Comment("@Success 200 {object} pkg.APIResult")
 	content.Comment("@Failure 500 {object} pkg.APIErrorResult")
 	content.Comment(fmt.Sprintf("@Router /_%s_%s_path_/%s/custom [get]", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.PascalCase().Get())),
 	).Id("Custom").Params(
 		jen.Id("ctx").Qual("github.com/kataras/iris/v12", "Context"),
 	).Block(
@@ -1165,12 +1165,12 @@ func genCustomDelivery(modelName string, catalog string, overwrite bool) {
 func genCustomUsecase(modelName string, catalog string, overwrite bool) {
 	ca := stringy.New(catalog)
 	mo := stringy.New(modelName)
-	repo := stringy.New(fmt.Sprintf("%sRepo", mo.CamelCase())).LcFirst()
+	repo := stringy.New(fmt.Sprintf("%sRepo", mo.PascalCase().Get())).LcFirst()
 	content := jen.NewFile(fmt.Sprintf("%s_%s", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	// Import
 	content.ImportAlias("github.com/anden007/dp_clean_core/pkg", "pkg")
 	// Interface
-	content.Type().Id(fmt.Sprintf("I%sUsecase", mo.CamelCase())).Interface(
+	content.Type().Id(fmt.Sprintf("I%sUsecase", mo.PascalCase().Get())).Interface(
 		jen.Id("Custom").Params(
 			jen.Id("ctx").Qual("context", "Context"),
 		).Parens(
@@ -1181,16 +1181,16 @@ func genCustomUsecase(modelName string, catalog string, overwrite bool) {
 		),
 	).Line()
 	// Struct
-	content.Type().Id(fmt.Sprintf("%sUsecase", mo.CamelCase())).Struct(
+	content.Type().Id(fmt.Sprintf("%sUsecase", mo.PascalCase().Get())).Struct(
 		jen.Id("logCenter").Qual("github.com/anden007/dp_clean_core/part", "ILogCenter"),
-		jen.Id(repo).Op("*").Id(fmt.Sprintf("%sRepository", mo.CamelCase())),
+		jen.Id(repo).Op("*").Id(fmt.Sprintf("%sRepository", mo.PascalCase().Get())),
 	).Line()
 	// New
 	content.Func().Id("NewUsecase").Params(
 		jen.Id("logCenter").Qual("github.com/anden007/dp_clean_core/part", "ILogCenter"),
-		jen.Id(repo).Op("*").Id(fmt.Sprintf("%sRepository", mo.CamelCase())),
-	).Id(fmt.Sprintf("I%sUsecase", mo.CamelCase())).Block(
-		jen.Return().Op("&").Id(fmt.Sprintf("%sUsecase", mo.CamelCase())).Values(
+		jen.Id(repo).Op("*").Id(fmt.Sprintf("%sRepository", mo.PascalCase().Get())),
+	).Id(fmt.Sprintf("I%sUsecase", mo.PascalCase().Get())).Block(
+		jen.Return().Op("&").Id(fmt.Sprintf("%sUsecase", mo.PascalCase().Get())).Values(
 			jen.Dict{
 				jen.Id("logCenter"): jen.Id("logCenter"),
 				jen.Id(repo):        jen.Id(repo),
@@ -1199,7 +1199,7 @@ func genCustomUsecase(modelName string, catalog string, overwrite bool) {
 	).Line()
 	// Custom
 	content.Func().Params(
-		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.CamelCase())),
+		jen.Id("m").Op("*").Id(fmt.Sprintf("%sUsecase", mo.PascalCase().Get())),
 	).Id("Custom").Params(
 		jen.Id("ctx").Qual("context", "Context"),
 	).Parens(
@@ -1221,7 +1221,7 @@ func genCustomRepository(modelName string, catalog string, overwrite bool) {
 	// Import
 	content.ImportAlias("github.com/anden007/dp_clean_core/part", "part")
 	// Struct
-	content.Type().Id(fmt.Sprintf("%sRepository", mo.CamelCase())).Struct(
+	content.Type().Id(fmt.Sprintf("%sRepository", mo.PascalCase().Get())).Struct(
 		jen.Id("db").Qual("github.com/anden007/dp_clean_core/part", "IDataBase"),
 		jen.Id("dataLogger").Qual("github.com/anden007/dp_clean_core/part", "IDataLogger"),
 	).Line()
@@ -1229,8 +1229,8 @@ func genCustomRepository(modelName string, catalog string, overwrite bool) {
 	content.Func().Id("NewRepository").Params(
 		jen.Id("db").Qual("github.com/anden007/dp_clean_core/part", "IDataBase"),
 		jen.Id("dataLogger").Qual("github.com/anden007/dp_clean_core/part", "IDataLogger"),
-	).Op("*").Id(fmt.Sprintf("%sRepository", mo.CamelCase())).Block(
-		jen.Return().Op("&").Id(fmt.Sprintf("%sRepository", mo.CamelCase())).Values(
+	).Op("*").Id(fmt.Sprintf("%sRepository", mo.PascalCase().Get())).Block(
+		jen.Return().Op("&").Id(fmt.Sprintf("%sRepository", mo.PascalCase().Get())).Values(
 			jen.Dict{
 				jen.Id("db"):         jen.Id("db"),
 				jen.Id("dataLogger"): jen.Id("dataLogger"),
