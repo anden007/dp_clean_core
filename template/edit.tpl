@@ -45,7 +45,7 @@ type EditOption struct{
             <% if options.LabelPosition!="left"{ %>
             <Row :gutter="32">
             <% } %>
-            <% 
+            <%
             for j:=0; j<options.RowNum; j++{
             if len(fields)==0||curr>len(fields){
               break
@@ -236,7 +236,7 @@ type EditOption struct{
 if options.Api{
 %>
 // 根据你的实际请求api.js位置路径修改
-import { edit<%==s options.ApiName%> } from "@/api/index";
+import { edit<%==s options.ApiName%> } from "./api";
 <%
 }
 %>

@@ -338,7 +338,7 @@ import { add`)
 		buffer.WriteString(options.ApiName)
 		buffer.WriteString(`, edit`)
 		buffer.WriteString(options.ApiName)
-		buffer.WriteString(` } from "@/api/index";
+		buffer.WriteString(` } from "./api";
 `)
 
 	}
@@ -624,7 +624,7 @@ export default {
             // });
             // 模拟请求
             this.submitLoading = false;
-							  
+
             this.$Message.success("操作成功");
             this.$emit("on-submit", true);
             this.visible = false;

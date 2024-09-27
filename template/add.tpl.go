@@ -348,7 +348,7 @@ func Add(fields []pkg.FormField, options AddOption, buffer *bytes.Buffer) {
 // 根据你的实际请求api.js位置路径修改
 import { add`)
 		buffer.WriteString(options.ApiName)
-		buffer.WriteString(` } from "@/api/index";
+		buffer.WriteString(` } from "./api";
 `)
 
 	}

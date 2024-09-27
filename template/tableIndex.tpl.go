@@ -567,7 +567,7 @@ import { get`)
 		buffer.WriteString(options.ApiName)
 		buffer.WriteString(`List, delete`)
 		buffer.WriteString(options.ApiName)
-		buffer.WriteString(` } from "@/api/index";
+		buffer.WriteString(` } from "./api";
 `)
 
 	}
@@ -657,7 +657,7 @@ export default {
 		buffer.WriteString(`" }, // 默认排序字段
         order: { value: "`)
 		buffer.WriteString(options.DefaultSortType)
-		buffer.WriteString(`" }, // 默认排序方式  
+		buffer.WriteString(`" }, // 默认排序方式
         `)
 	}
 

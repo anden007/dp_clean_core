@@ -10,8 +10,8 @@ type TableIndexOption struct{
     DaterangeSearch bool
     Api bool
     DefaultSort string
-    DefaultSortType string    
-    SearchDict bool    
+    DefaultSortType string
+    SearchDict bool
     SearchCustomList bool
     VueName string
 }
@@ -359,7 +359,7 @@ type TableIndexOption struct{
 if options.Api{
 %>
 // 根据你的实际请求api.js位置路径修改
-import { get<%==s options.ApiName%>List, delete<%==s options.ApiName%> } from "@/api/index";
+import { get<%==s options.ApiName%>List, delete<%==s options.ApiName%> } from "./api";
 <%
 }
 %>
@@ -421,8 +421,8 @@ export default {
         pageSize: { value: 10 }, // 页面大小
         <%  if options.DefaultSort != "" {%>
         sort: { value: "<%==s options.DefaultSort%>" }, // 默认排序字段
-        order: { value: "<%==s options.DefaultSortType%>" }, // 默认排序方式  
-        <%}%>     
+        order: { value: "<%==s options.DefaultSortType%>" }, // 默认排序方式
+        <%}%>
         <%
         for _, item := range fields{
         %>
@@ -431,7 +431,7 @@ export default {
         }
         %>
       },
-      <% if options.DaterangeSearch{ 
+      <% if options.DaterangeSearch{
         for _,item := range fields{
           if item.Searchable && item.SearchType=="daterange"{
       %>
@@ -557,7 +557,7 @@ export default {
     <% } %>
     handleReset() {
       this.searchForm = JSON.parse(JSON.stringify( this.initSearchForm ));
-      <% if options.DaterangeSearch{ 
+      <% if options.DaterangeSearch{
         for _,item := range fields{
           if item.Searchable && item.SearchType=="daterange"{
       %>
@@ -574,7 +574,7 @@ export default {
       }
       this.getDataList();
     },
-    <% if options.DaterangeSearch{ 
+    <% if options.DaterangeSearch{
         for _,item := range fields{
           if item.Searchable && item.SearchType=="daterange"{
     %>

@@ -557,7 +557,7 @@ import { get`)
 		buffer.WriteString(options.ApiName)
 		buffer.WriteString(`List, delete`)
 		buffer.WriteString(options.ApiName)
-		buffer.WriteString(` } from "@/api/index";
+		buffer.WriteString(` } from "./api";
 `)
 
 	}
@@ -634,7 +634,7 @@ export default {
 	}
 	buffer.WriteString(`
       initSearchForm: {},
-      searchForm: { // 搜索框初始化对象        
+      searchForm: { // 搜索框初始化对象
         pageNumber: { value: 1 }, // 当前页数
         pageSize: { value: 10 }, // 页面大小
         `)
@@ -645,7 +645,7 @@ export default {
 		buffer.WriteString(`" }, // 默认排序字段
         order: { value: "`)
 		buffer.WriteString(options.DefaultSortType)
-		buffer.WriteString(`" }, // 默认排序方式  
+		buffer.WriteString(`" }, // 默认排序方式
         `)
 	}
 

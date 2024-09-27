@@ -13,7 +13,7 @@ type TreeOption struct{
   Span string
   IsDrawer bool
   ModalWidth string
-  TotalRowTree int  
+  TotalRowTree int
   Api bool
   ApiName string
   FileUpload bool
@@ -103,7 +103,7 @@ type TreeOption struct{
               <% if options.LabelPosition!="left"{ %>
               <Row :gutter="32">
               <% } %>
-              <% 
+              <%
               for j:=0; j<options.RowNum; j++{
               if len(fields)==0||curr>len(fields){
                 break
@@ -505,7 +505,7 @@ type TreeOption struct{
 if options.Api{
 %>
 // 根据你的实际请求api.js位置路径修改
-import { init<%==s options.ApiName%>, load<%==s options.ApiName%>, add<%==s options.ApiName%>, edit<%==s options.ApiName%>, delete<%==s options.ApiName%>, search<%==s options.ApiName%> } from "@/api/index";
+import { init<%==s options.ApiName%>, load<%==s options.ApiName%>, add<%==s options.ApiName%>, edit<%==s options.ApiName%>, delete<%==s options.ApiName%>, search<%==s options.ApiName%> } from "./api";
 <%
 }
 %>

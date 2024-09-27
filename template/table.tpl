@@ -336,7 +336,7 @@ type TableOption struct{
             <% if options.LabelPosition!="left"{ %>
             <Row :gutter="32">
             <% } %>
-            <% 
+            <%
             for j:=0; j<options.RowNum; j++{
             if len(fields)==0||curr>len(fields){
               break
@@ -525,7 +525,7 @@ type TableOption struct{
 if options.Api{
 %>
 // 根据你的实际请求api.js位置路径修改
-import { get<%==s options.ApiName%>List, add<%==s options.ApiName%>, edit<%==s options.ApiName%>, delete<%==s options.ApiName%> } from "@/api/index";
+import { get<%==s options.ApiName%>List, add<%==s options.ApiName%>, edit<%==s options.ApiName%>, delete<%==s options.ApiName%> } from "./api";
 <%
 }
 %>
@@ -653,8 +653,8 @@ export default {
         pageSize: { value: 10 }, // 页面大小
         <%  if options.DefaultSort != "" {%>
         sort: { value: "<%==s options.DefaultSort%>" }, // 默认排序字段
-        order: { value: "<%==s options.DefaultSortType%>" }, // 默认排序方式  
-        <%}%>      
+        order: { value: "<%==s options.DefaultSortType%>" }, // 默认排序方式
+        <%}%>
         <%
         for _, item := range fields{
         %>
@@ -663,7 +663,7 @@ export default {
         }
         %>
       },
-      <% if options.DaterangeSearch{ 
+      <% if options.DaterangeSearch{
         for _,item := range fields{
           if item.Searchable && item.SearchType=="daterange"{
       %>
@@ -829,7 +829,7 @@ export default {
     <% } %>
     handleReset() {
       this.searchForm = JSON.parse(JSON.stringify( this.initSearchForm ));
-      <% if options.DaterangeSearch{ 
+      <% if options.DaterangeSearch{
         for _,item := range fields{
           if item.Searchable && item.SearchType=="daterange"{
       %>
@@ -852,7 +852,7 @@ export default {
     changeSelect(e) {
       this.selectList = e;
     },
-    <% if options.DaterangeSearch{ 
+    <% if options.DaterangeSearch{
         for _,item := range fields{
           if item.Searchable && item.SearchType=="daterange"{
     %>

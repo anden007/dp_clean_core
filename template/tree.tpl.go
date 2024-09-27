@@ -799,7 +799,7 @@ import { init`)
 		buffer.WriteString(options.ApiName)
 		buffer.WriteString(`, search`)
 		buffer.WriteString(options.ApiName)
-		buffer.WriteString(` } from "@/api/index";
+		buffer.WriteString(` } from "./api";
 `)
 
 	}
