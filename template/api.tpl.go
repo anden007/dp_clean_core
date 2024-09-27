@@ -7,8 +7,8 @@ import "bytes"
 
 func Api(apiName string, apiPath string, vueName string, buffer *bytes.Buffer) {
 	buffer.WriteString(`
-// 统一请求路径前缀在libs/axios.js中添加
-// import { getRequest, postRequest, deleteRequest } from '@/libs/axios';
+// 基础请求方法
+import { getRequest, postRequest, putRequest, postBodyRequest, getNoAuthRequest, postNoAuthRequest, exportRequest } from "@/libs/axios";
 
 // `)
 	buffer.WriteString(apiName)
