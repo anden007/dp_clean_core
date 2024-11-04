@@ -1,4 +1,4 @@
-package wxcomponent
+package part
 
 import (
 	"net/http"

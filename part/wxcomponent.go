@@ -1,11 +1,10 @@
-package wxcomponent
+package part
 
 import (
 	"context"
 	"time"
 
 	"github.com/anden007/dp_clean_core/misc"
-	"github.com/anden007/dp_clean_core/part"
 	"github.com/silenceper/wechat/v2"
 	"github.com/silenceper/wechat/v2/cache"
 	"github.com/spf13/viper"
@@ -44,7 +43,7 @@ func NewComponent() *Component {
 			instance.MiniProgram = NewMiniProgram(instance)
 		}
 	}
-	if part.ENV == part.ENUM_ENV_DEV {
+	if ENV == ENUM_ENV_DEV {
 		misc.ServiceLoadInfo("WxComponent", enable, loadTime)
 	}
 	return instance
