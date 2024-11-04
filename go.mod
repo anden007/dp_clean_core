@@ -62,6 +62,7 @@ require (
 	github.com/apache/thrift v0.20.0 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
+	github.com/bradfitz/gomemcache v0.0.0-20220106215444-fb4bf637b56d // indirect
 	github.com/bytedance/sonic v1.9.1 // indirect
 	github.com/cenk/backoff v2.2.1+incompatible // indirect
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
@@ -164,6 +165,7 @@ require (
 	github.com/schollz/closestmatch v2.1.0+incompatible // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/segmentio/encoding v0.3.6 // indirect
+	github.com/silenceper/wechat/v2 v2.1.7 // indirect
 	github.com/smallnest/quick v0.2.0 // indirect
 	github.com/soheilhy/cmux v0.1.5 // indirect
 	github.com/sosodev/duration v1.3.1 // indirect
