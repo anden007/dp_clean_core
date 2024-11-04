@@ -30,8 +30,8 @@ func NewMiniProgram(context *Component) *MiniProgram {
 	instance.wechat = context.Wechat
 
 	cfg := &miniprogramConfig.Config{
-		AppID:     viper.GetString("component.weapp.app_id"),
-		AppSecret: viper.GetString("component.weapp.app_secret"),
+		AppID:     viper.GetString("component.weapp_app_id"),
+		AppSecret: viper.GetString("component.weapp_app_secret"),
 		Cache:     context.InnerCache,
 	}
 	instance.Program = context.Wechat.GetMiniProgram(cfg)
