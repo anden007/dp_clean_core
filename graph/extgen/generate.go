@@ -174,8 +174,8 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 	content.Comment("@Accept json")
 	content.Comment("@Produce json")
 	content.Comment("@Param JsonData body string true \"body参数(payload)\"")
-	content.Comment("@Success 200 {object} pkg.APIResult")
-	content.Comment("@Failure 500 {object} pkg.APIErrorResult")
+	content.Comment("@Success 200 {object} interface{}")
+	content.Comment("@Failure 500 {object} interface{}")
 	content.Comment(fmt.Sprintf("@Router /_%s_%s_path_/%s/add [post]", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	content.Func().Params(
 		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.PascalCase().Get())),
@@ -218,8 +218,8 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 	content.Comment("@Accept x-www-form-urlencoded")
 	content.Comment("@Produce json")
 	content.Comment("@Param ids formData string true \"要删除的数据IDs, 半角逗号分隔\"")
-	content.Comment("@Success 200 {object} pkg.APIResult")
-	content.Comment("@Failure 500 {object} pkg.APIErrorResult")
+	content.Comment("@Success 200 {object} interface{}")
+	content.Comment("@Failure 500 {object} interface{}")
 	content.Comment(fmt.Sprintf("@Router /_%s_%s_path_/%s/delByIds [post]", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	content.Func().Params(
 		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.PascalCase().Get())),
@@ -260,8 +260,8 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 	content.Comment("@Accept json")
 	content.Comment("@Produce json")
 	content.Comment("@Param JsonData body string true \"body参数(payload)\"")
-	content.Comment("@Success 200 {object} pkg.APIResult")
-	content.Comment("@Failure 500 {object} pkg.APIErrorResult")
+	content.Comment("@Success 200 {object} interface{}")
+	content.Comment("@Failure 500 {object} interface{}")
 	content.Comment(fmt.Sprintf("@Router /_%s_%s_path_/%s/edit [post]", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	content.Func().Params(
 		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.PascalCase().Get())),
@@ -303,8 +303,8 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 	content.Comment("@Accept x-www-form-urlencoded")
 	content.Comment("@Produce json")
 	content.Comment("@Param id path string true \"数据Id\"")
-	content.Comment("@Success 200 {object} pkg.APIResult")
-	content.Comment("@Failure 500 {object} pkg.APIErrorResult")
+	content.Comment("@Success 200 {object} interface{}")
+	content.Comment("@Failure 500 {object} interface{}")
 	content.Comment(fmt.Sprintf("@Router /_%s_%s_path_/%s/getById/{id} [get]", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	content.Func().Params(
 		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.PascalCase().Get())),
@@ -348,8 +348,8 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 	content.Comment(fmt.Sprintf("@Tags %s", ca.PascalCase().Get()))
 	content.Comment("@Accept x-www-form-urlencoded")
 	content.Comment("@Produce json")
-	content.Comment("@Success 200 {object} pkg.APIResult")
-	content.Comment("@Failure 500 {object} pkg.APIErrorResult")
+	content.Comment("@Success 200 {object} interface{}")
+	content.Comment("@Failure 500 {object} interface{}")
 	content.Comment(fmt.Sprintf("@Router /_%s_%s_path_/%s/getAll [get]", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	content.Func().Params(
 		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.PascalCase().Get())),
@@ -393,8 +393,8 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 	content.Comment("@Accept json")
 	content.Comment("@Produce json")
 	content.Comment("@Param JsonData body string true \"body参数(payload)\"")
-	content.Comment("@Success 200 {object} pkg.APIResult")
-	content.Comment("@Failure 500 {object} pkg.APIErrorResult")
+	content.Comment("@Success 200 {object} interface{}")
+	content.Comment("@Failure 500 {object} interface{}")
 	content.Comment(fmt.Sprintf("@Router /_%s_%s_path_/%s/getByCondition [post]", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	content.Func().Params(
 		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.PascalCase().Get())),
@@ -1127,8 +1127,8 @@ func genCustomDelivery(modelName string, catalog string, overwrite bool) {
 	content.Comment(fmt.Sprintf("@Tags %s", ca.PascalCase().Get()))
 	content.Comment("@Accept json")
 	content.Comment("@Produce json")
-	content.Comment("@Success 200 {object} pkg.APIResult")
-	content.Comment("@Failure 500 {object} pkg.APIErrorResult")
+	content.Comment("@Success 200 {object} interface{}")
+	content.Comment("@Failure 500 {object} interface{}")
 	content.Comment(fmt.Sprintf("@Router /_%s_%s_path_/%s/custom [get]", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower(), mo.SnakeCase().ToLower()))
 	content.Func().Params(
 		jen.Id("m").Op("*").Id(fmt.Sprintf("%sHandler", mo.PascalCase().Get())),
