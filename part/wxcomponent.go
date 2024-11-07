@@ -22,7 +22,7 @@ type Component struct {
 	OpenPlatform IOpenPlatform
 }
 
-func NewComponent() *Component {
+func NewComponent() IComponent {
 	instance := new(Component)
 	loadTime := time.Now()
 	enable := viper.GetBool("component.enable")
