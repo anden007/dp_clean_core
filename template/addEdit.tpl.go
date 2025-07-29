@@ -642,6 +642,9 @@ export default {
 
 		buffer.WriteString(`
             delete this.form.id;
+            if('createTime' in this.form){
+              delete this.form.createTime;
+            }
             add`)
 		buffer.WriteString(options.ApiName)
 		buffer.WriteString(`(this.form).then(res => {

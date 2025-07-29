@@ -457,6 +457,9 @@ export default {
             if options.Api{
             %>
             delete this.form.id;
+            if('createTime' in this.form){
+              delete this.form.createTime;
+            }
             add<%==s options.ApiName%>(this.form).then(res => {
               this.submitLoading = false;
               if (res.success) {

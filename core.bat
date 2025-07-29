@@ -21,6 +21,8 @@ goto End
 @echo 参数错误,命令正确用法如下：
 @echo core [command]
 @echo   - command:
-@echo     - tpl 更新数据模型CRUD、VUE生成模板文件,一般不常用 
+@echo     - tpl 更新数据模型CRUD、VUE生成模板文件,一般不常用
+@echo     - 如提示hero 命令不存在，请先安装hero命令工具：
+@echo     - go install github.com/shiyanhui/hero/hero
 :End
 

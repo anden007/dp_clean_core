@@ -1404,6 +1404,9 @@ export default {
           if (this.modalType === 0) {
             // 添加 避免编辑后传入id等数据 记得删除
             delete this.form.id;
+            if('createTime' in this.form){
+              delete this.form.createTime;
+            }
             `)
 
 	if options.Api {
