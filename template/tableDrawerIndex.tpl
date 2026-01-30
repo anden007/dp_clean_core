@@ -112,7 +112,7 @@ type TableDrawerIndexOption struct{
             }
           }
           %>
-            <FormItem style="margin-left:-35px;" class="br">
+            <FormItem  class="br">
               <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
               <Button @click="handleReset">重置</Button>
             </FormItem>
@@ -284,7 +284,7 @@ type TableDrawerIndexOption struct{
             }
             %>
             </span>
-            <FormItem style="margin-left:-35px;" class="br">
+            <FormItem  class="br">
               <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
               <Button @click="handleReset">重置</Button>
               <a class="drop-down" @click="dropDown">

@@ -196,7 +196,7 @@ func Table(fields []pkg.FormField, firstTwo []pkg.FormField, rest []pkg.FormFiel
 		}
 
 		buffer.WriteString(`
-          <FormItem style="margin-left:-35px;" class="br">
+          <FormItem  class="br">
             <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
             <Button @click="handleReset">重置</Button>
           </FormItem>
@@ -491,7 +491,7 @@ func Table(fields []pkg.FormField, firstTwo []pkg.FormField, rest []pkg.FormFiel
 
 		buffer.WriteString(`
           </span>
-          <FormItem style="margin-left:-35px;" class="br">
+          <FormItem  class="br">
             <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
             <Button @click="handleReset">重置</Button>
             <a class="drop-down" @click="dropDown">
