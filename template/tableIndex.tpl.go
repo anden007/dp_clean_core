@@ -629,7 +629,7 @@ export default {
       `)
 	if options.SearchSize > 0 {
 		buffer.WriteString(`
-      openSearch: true, // 显示搜索
+      openSearch: false, // 显示搜索
       `)
 	}
 	buffer.WriteString(`

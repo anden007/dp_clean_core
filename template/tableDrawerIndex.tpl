@@ -391,7 +391,7 @@ export default {
   data() {
     return {
       <% if options.SearchSize > 0 { %>
-      openSearch: true, // 显示搜索
+      openSearch: false, // 显示搜索
       <% } %>
       openTip: true, // 显示提示
       showType: "0",
