@@ -498,17 +498,18 @@ func TableDrawerIndex(fields []pkg.FormField, firstTwo []pkg.FormField, rest []p
 
 	buffer.WriteString(`
       <Row class="operation">
-        <Button @click="add" type="primary" icon="md-add">添加</Button>
-        <Button @click="delAll" icon="md-trash">批量删除</Button>
-        <Button @click="getDataList" icon="md-refresh">刷新</Button>
-        `)
+        <ButtonGroup>
+          <Button @click="add" type="primary" icon="md-add">添加</Button>
+          <Button @click="delAll" icon="md-trash">批量删除</Button>
+          <Button @click="getDataList" icon="md-refresh">刷新</Button>
+          `)
 	if options.SearchSize > 0 {
 		buffer.WriteString(`
-        <Button type="dashed" @click="openSearch=!openSearch">{{openSearch ? "关闭搜索" : "开启搜索"}}</Button>
-        `)
+          <Button icon="ios-search" @click="openSearch=!openSearch">{{openSearch ? "关闭搜索" : "开启搜索"}}</Button>
+          `)
 	}
 	buffer.WriteString(`
-        <Button type="dashed" @click="openTip=!openTip">{{openTip ? "关闭提示" : "开启提示"}}</Button>
+        <ButtonGroup>
       </Row>
       <Alert show-icon v-show="openTip">
         已选择
@@ -534,7 +535,7 @@ func TableDrawerIndex(fields []pkg.FormField, firstTwo []pkg.FormField, rest []p
           :page-size="searchForm.pageSize.value"
           @on-change="changePage"
           @on-page-size-change="changePageSize"
-          :page-size-opts="[10,20,50]"
+          :page-size-opts="[10,50,100]"
           size="small"
           show-total
           show-elevator
@@ -636,7 +637,7 @@ export default {
       initSearchForm: {},
       searchForm: { // 搜索框初始化对象
         pageNumber: { value: 1 }, // 当前页数
-        pageSize: { value: 10 }, // 页面大小
+        pageSize: { value: 100 }, // 页面大小
         `)
 	if options.DefaultSort != "" {
 		buffer.WriteString(`

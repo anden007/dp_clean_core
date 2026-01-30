@@ -310,13 +310,14 @@ type TableOption struct{
       }
       %>
       <Row class="operation">
-        <Button @click="add" type="primary" icon="md-add">添加</Button>
-        <Button @click="delAll" icon="md-trash">批量删除</Button>
-        <Button @click="getDataList" icon="md-refresh">刷新</Button>
-        <% if options.SearchSize>0{ %>
-        <Button type="dashed" @click="openSearch=!openSearch">{{openSearch ? "关闭搜索" : "开启搜索"}}</Button>
-        <% } %>
-        <Button type="dashed" @click="openTip=!openTip">{{openTip ? "关闭提示" : "开启提示"}}</Button>
+        <ButtonGroup>
+          <Button @click="add" type="primary" icon="md-add">添加</Button>
+          <Button @click="delAll" icon="md-trash">批量删除</Button>
+          <Button @click="getDataList" icon="md-refresh">刷新</Button>
+          <% if options.SearchSize>0{ %>
+          <Button icon="ios-search" @click="openSearch=!openSearch">{{openSearch ? "关闭搜索" : "开启搜索"}}</Button>
+          <% } %>
+        </ButtonGroup>
       </Row>
       <Alert show-icon v-show="openTip">
         已选择 <span class="select-count">{{selectList.length}}</span> 项
@@ -324,7 +325,7 @@ type TableOption struct{
       </Alert>
       <Table id="dataTable" :height="tableHeight" :loading="loading" border :columns="columns" :data="data" ref="table" sortable="custom" @on-sort-change="changeSort" @on-selection-change="changeSelect"></Table>
       <Row type="flex" justify="end" class="page">
-        <Page :current="searchForm.pageNumber.value" :total="total" :page-size="searchForm.pageSize.value" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50]" size="small" show-total show-elevator show-sizer></Page>
+        <Page :current="searchForm.pageNumber.value" :total="total" :page-size="searchForm.pageSize.value" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,50,100]" size="small" show-total show-elevator show-sizer></Page>
       </Row>
     </Card>
     <Modal :title="modalTitle" v-model="modalVisible" :mask-closable='false' :width="<%==s options.ModalWidth%>">
@@ -650,7 +651,7 @@ export default {
       initSearchForm: {},
       searchForm: { // 搜索框初始化对象
         pageNumber: { value: 1 }, // 当前页数
-        pageSize: { value: 10 }, // 页面大小
+        pageSize: { value: 100 }, // 页面大小
         <%  if options.DefaultSort != "" {%>
         sort: { value: "<%==s options.DefaultSort%>" }, // 默认排序字段
         order: { value: "<%==s options.DefaultSortType%>" }, // 默认排序方式

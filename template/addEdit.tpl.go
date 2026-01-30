@@ -684,7 +684,7 @@ export default {
     },
     setCurrentValue(value) {
       if (value === this.visible) {
-	  	this.$refs.form.resetFields();
+        this.$refs.form.resetFields();
         return;
       }
       if (this.type == "1") {
