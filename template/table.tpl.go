@@ -987,8 +987,8 @@ export default {
 	if options.HideSearch {
 		buffer.WriteString(`
       drop: true,
-      dropDownContent: "展开",
-      dropDownIcon: "ios-arrow-down",
+      dropDownContent: "收起",
+      dropDownIcon: "ios-arrow-up",
       `)
 	}
 	buffer.WriteString(`

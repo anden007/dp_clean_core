@@ -649,8 +649,8 @@ export default {
       modalTitle: "", // 添加或编辑标题
       <% if options.HideSearch { %>
       drop: true,
-      dropDownContent: "展开",
-      dropDownIcon: "ios-arrow-down",
+      dropDownContent: "收起",
+      dropDownIcon: "ios-arrow-up",
       <% } %>
       initSearchForm: {},
       searchForm: { // 搜索框初始化对象

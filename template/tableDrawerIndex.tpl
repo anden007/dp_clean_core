@@ -403,8 +403,8 @@ export default {
       loading: true, // 表单加载状态
       <% if options.HideSearch { %>
       drop: true,
-      dropDownContent: "展开",
-      dropDownIcon: "ios-arrow-down",
+      dropDownContent: "收起",
+      dropDownIcon: "ios-arrow-up",
       <% } %>
       initSearchForm: {},
       searchForm: { // 搜索框初始化对象
