@@ -115,8 +115,10 @@ type TableIndexOption struct{
           }
           %>
             <FormItem  class="br">
-              <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
-              <Button @click="handleReset">重置</Button>
+              <ButtonGroup>
+                <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
+                <Button @click="handleReset">重置</Button>
+              </ButtonGroup>
             </FormItem>
           </Form>
         </Row>
@@ -301,8 +303,10 @@ type TableIndexOption struct{
             %>
             </span>
             <FormItem  class="br">
-              <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
-              <Button @click="handleReset">重置</Button>
+              <ButtonGroup>
+                <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
+                <Button @click="handleReset">重置</Button>
+              </ButtonGroup>
               <a class="drop-down" @click="dropDown">
                 {{dropDownContent}}
                 <Icon :type="dropDownIcon"></Icon>
@@ -412,7 +416,7 @@ export default {
       currView: "index",
       loading: true, // 表单加载状态
       <% if options.HideSearch { %>
-      drop: false,
+      drop: true,
       dropDownContent: "展开",
       dropDownIcon: "ios-arrow-down",
       <% } %>

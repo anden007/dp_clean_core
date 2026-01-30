@@ -125,8 +125,10 @@ type TableOption struct{
         }
         %>
           <FormItem  class="br">
-            <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
-            <Button @click="handleReset">重置</Button>
+            <ButtonGroup>
+              <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
+              <Button @click="handleReset">重置</Button>
+            </ButtonGroup>
           </FormItem>
         </Form>
       </Row>
@@ -297,8 +299,10 @@ type TableOption struct{
           %>
           </span>
           <FormItem  class="br">
-            <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
-            <Button @click="handleReset">重置</Button>
+            <ButtonGroup>
+              <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
+              <Button @click="handleReset">重置</Button>
+            </ButtonGroup>
             <a class="drop-down" @click="dropDown">
               {{dropDownContent}}
               <Icon :type="dropDownIcon"></Icon>
@@ -644,7 +648,7 @@ export default {
       modalVisible: false, // 添加或编辑显示
       modalTitle: "", // 添加或编辑标题
       <% if options.HideSearch { %>
-      drop: false,
+      drop: true,
       dropDownContent: "展开",
       dropDownIcon: "ios-arrow-down",
       <% } %>

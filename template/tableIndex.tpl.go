@@ -190,8 +190,10 @@ func TableIndex(fields []pkg.FormField, firstTwo []pkg.FormField, rest []pkg.For
 
 		buffer.WriteString(`
             <FormItem  class="br">
-              <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
-              <Button @click="handleReset">重置</Button>
+              <ButtonGroup>
+                <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
+                <Button @click="handleReset">重置</Button>
+              </ButtonGroup>
             </FormItem>
           </Form>
         </Row>
@@ -501,8 +503,10 @@ func TableIndex(fields []pkg.FormField, firstTwo []pkg.FormField, rest []pkg.For
 		buffer.WriteString(`
             </span>
             <FormItem  class="br">
-              <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
-              <Button @click="handleReset">重置</Button>
+              <ButtonGroup>
+                <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
+                <Button @click="handleReset">重置</Button>
+              </ButtonGroup>
               <a class="drop-down" @click="dropDown">
                 {{dropDownContent}}
                 <Icon :type="dropDownIcon"></Icon>
@@ -640,7 +644,7 @@ export default {
       `)
 	if options.HideSearch {
 		buffer.WriteString(`
-      drop: false,
+      drop: true,
       dropDownContent: "展开",
       dropDownIcon: "ios-arrow-down",
       `)
