@@ -131,7 +131,7 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 		jen.Comment("根据当前模块挂载路径,修改Swagger中API请求路径"),
 		jen.Id("reealPath").Op(":=").Id("party").Dot("GetRelPath").Call(),
 		jen.If(
-			jen.Op("!").Qual("strings", "EqualFold").Call(
+			jen.Qual("strings", "EqualFold").Call(
 				jen.Id("reealPath"),
 				jen.Lit("/"),
 			),
@@ -1114,7 +1114,7 @@ func genCustomDelivery(modelName string, catalog string, overwrite bool) {
 		jen.Comment("根据当前模块挂载路径,修改Swagger中API请求路径"),
 		jen.Id("reealPath").Op(":=").Id("party").Dot("GetRelPath").Call(),
 		jen.If(
-			jen.Op("!").Qual("strings", "EqualFold").Call(
+			jen.Qual("strings", "EqualFold").Call(
 				jen.Id("reealPath"),
 				jen.Lit("/"),
 			),
