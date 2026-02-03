@@ -82,10 +82,6 @@ func (m *QYWXService) GetCacheKey(requestId string, cacheType QywxCacheKeyType) 
 
 // 第一步：尝试登录，如果已经登录，直接返回
 func (m *QYWXService) TryAuth(ctx iris.Context, authTarget, authBackUrl string) (result QYWXUserInfo, err error) {
-	if authTarget == "" {
-		err = errors.New("必须指定授权目标(authTarget)")
-		return
-	}
 	authRequestId := ctx.URLParamTrim("authRequestId")
 	if authRequestId == "" {
 		authRequestId = misc.NewGuidString()

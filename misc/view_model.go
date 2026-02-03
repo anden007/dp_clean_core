@@ -41,8 +41,6 @@ func DBModel2View[Source base.IDBModel, DEST base.IViewModel](model Source) (res
 	copiers := copy.New()
 	copier := copiers.Get(new(DEST), new(Source))
 	copier.Copy(&result, &(model))
-	if err == nil {
-		err = result.ToViewModel()
-	}
+	err = result.ToViewModel()
 	return
 }
