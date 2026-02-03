@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
-	"os"
 	"strings"
 	"time"
 
@@ -14,6 +13,7 @@ import (
 	"github.com/kataras/iris/v12"
 	jsontime "github.com/liamylian/jsontime/v2/v2"
 	"github.com/monaco-io/request"
+	"github.com/spf13/viper"
 )
 
 type QYWXUserInfo struct {
@@ -55,8 +55,8 @@ type QYWXService struct {
 
 func NewQYWXService(cache ICache, sessionCache ISessionCache, logCenter ILogCenter) IQYWXService {
 	return &QYWXService{
-		appId:        os.Getenv("qywx_app_id"),
-		agentId:      os.Getenv("qywx_agent_id"),
+		appId:        viper.GetString("qywx.app_id"),
+		agentId:      viper.GetString("qywx.agent_id"),
 		cache:        cache,
 		sessionCache: sessionCache,
 		json:         jsontime.ConfigWithCustomTimeFormat,
