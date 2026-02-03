@@ -309,7 +309,7 @@ type TableDrawerIndexOption struct{
           <% if options.SearchSize>0{ %>
           <Button icon="ios-search" @click="openSearch=!openSearch">{{openSearch ? "关闭搜索" : "开启搜索"}}</Button>
           <% } %>
-        <ButtonGroup>
+        </ButtonGroup>
       </Row>
       <Alert show-icon v-show="openTip">
         已选择

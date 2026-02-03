@@ -513,7 +513,7 @@ func TableDrawerIndex(fields []pkg.FormField, firstTwo []pkg.FormField, rest []p
           `)
 	}
 	buffer.WriteString(`
-        <ButtonGroup>
+        </ButtonGroup>
       </Row>
       <Alert show-icon v-show="openTip">
         已选择

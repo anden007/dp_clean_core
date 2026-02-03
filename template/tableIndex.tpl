@@ -322,7 +322,7 @@ type TableIndexOption struct{
           <Button @click="add" type="primary" icon="md-add">添加</Button>
           <Button @click="delAll" icon="md-trash">批量删除</Button>
           <Button @click="getDataList" icon="md-refresh">刷新</Button>
-        <ButtonGroup>
+        </ButtonGroup>
       </Row>
       <Alert show-icon v-show="openTip">
         已选择
