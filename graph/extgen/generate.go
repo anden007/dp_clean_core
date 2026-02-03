@@ -129,10 +129,19 @@ func genDelivery(modelName string, catalog string, overwrite bool) {
 		jen.Id(usecase).Qual("go-dp-clean/graph/model", fmt.Sprintf("I%sUsecase", mo.PascalCase().Get())),
 	).Block(
 		jen.Comment("根据当前模块挂载路径,修改Swagger中API请求路径"),
+		jen.Id("reealPath").Op(":=").Id("party").Dot("GetRelPath").Call(),
+		jen.If(
+			jen.Op("!").Qual("strings", "EqualFold").Call(
+				jen.Id("reealPath"),
+				jen.Lit("/"),
+			),
+		).Block(
+			jen.Id("reealPath").Op("=").Lit(""),
+		),
 		jen.Qual("go-dp-clean/docs", "SwaggerInfo").Dot("SwaggerTemplate").Op("=").Qual("github.com/anden007/dp_clean_core/misc", "ProcessSwaggerTemplate").Params(
 			jen.Qual("go-dp-clean/docs", "SwaggerInfo").Dot("SwaggerTemplate"),
 			jen.Lit(fmt.Sprintf("/_%s_%s_path_", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower())),
-			jen.Id("party").Dot("GetRelPath").Call(),
+			jen.Id("reealPath"),
 		),
 		jen.Line(),
 		jen.Id("handler").Op(":= &").Id(fmt.Sprintf("%sHandler", mo.PascalCase().Get())).Values(
@@ -1103,10 +1112,19 @@ func genCustomDelivery(modelName string, catalog string, overwrite bool) {
 		jen.Id(usecase).Id(fmt.Sprintf("I%sUsecase", mo.PascalCase().Get())),
 	).Block(
 		jen.Comment("根据当前模块挂载路径,修改Swagger中API请求路径"),
+		jen.Id("reealPath").Op(":=").Id("party").Dot("GetRelPath").Call(),
+		jen.If(
+			jen.Op("!").Qual("strings", "EqualFold").Call(
+				jen.Id("reealPath"),
+				jen.Lit("/"),
+			),
+		).Block(
+			jen.Id("reealPath").Op("=").Lit(""),
+		),
 		jen.Qual("go-dp-clean/docs", "SwaggerInfo").Dot("SwaggerTemplate").Op("=").Qual("github.com/anden007/dp_clean_core/misc", "ProcessSwaggerTemplate").Params(
 			jen.Qual("go-dp-clean/docs", "SwaggerInfo").Dot("SwaggerTemplate"),
 			jen.Lit(fmt.Sprintf("/_%s_%s_path_", ca.SnakeCase().ToLower(), mo.SnakeCase().ToLower())),
-			jen.Id("party").Dot("GetRelPath").Call(),
+			jen.Id("reealPath"),
 		),
 		jen.Line(),
 		jen.Id("handler").Op(":= &").Id(fmt.Sprintf("%sHandler", mo.PascalCase().Get())).Values(
